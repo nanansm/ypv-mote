@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "home": "首页",
+    "apply": "立即申请",
+    "language": "语言"
+  },
+  "hero": {
+    "title": "瑞士青年职业签证",
+    "subtitle": "资格预审表格",
+    "description": "了解您是否符合瑞士青年职业签证项目的申请条件。请填写我们的简短预审表格以检查您的资格。",
+    "cta": "开始预审",
+    "disclaimer": "这仅为资格预审。通过预审并不保证签证获批。"
+  },
+  "about": {
+    "title": "关于研讨会",
+    "description": "我们的研讨会提供有关瑞士青年职业签证申请流程、要求以及最大化成功机会的实用步骤的深入指导。",
+    "points": {
+      "eligibility": "了解资格标准",
+      "process": "逐步申请指导",
+      "tips": "来自经验丰富的顾问的实用建议",
+      "qa": "现场问答环节"
+    }
+  },
+  "form": {
+    "title": "资格预审表格",
+    "subtitle": "请填写所有部分以检查您的资格",
+    "section1": "联系方式",
+    "section2": "资格审查",
+    "section3": "背景信息",
+    "next": "继续",
+    "back": "返回",
+    "submit": "提交申请",
+    "submitting": "提交中...",
+    "checking": "检查资格中...",
+    "required": "此字段为必填项",
+    "invalidEmail": "请输入有效的电子邮箱地址",
+    "invalidDate": "请输入有效的日期",
+    "progress": "第 {current} 步，共 {total} 步",
+    "selectPlaceholder": "请选择"
+  },
+  "rejection": {
+    "title": "很遗憾，您目前不符合申请条件",
+    "subtitle": "感谢您对瑞士青年职业签证项目的关注。",
+    "country_not_eligible": "很遗憾——您的护照国籍（{country}）目前不符合瑞士青年职业签证项目的申请条件。该项目仅向特定合作国家的公民开放。",
+    "age_out_of_range": "很遗憾——瑞士青年职业签证对{country}护照持有人的年龄要求为{min}至{max}岁。根据您的出生日期，您目前{age}岁，不符合年龄要求。",
+    "vocational_training_required": "很遗憾——瑞士青年职业签证要求申请人完成职业培训或获得大学学历。这是瑞士当局的强制性要求。",
+    "field_interest_required": "很遗憾——该项目要求参与者对在瑞士从事其专业领域工作有真正的兴趣。",
+    "encouragement": "移民项目会不断更新。如果您的情况发生变化，我们鼓励您将来重新申请。",
+    "contact": "如果您认为此评估有误，请联系我们。",
+    "back": "返回首页"
+  },
+  "success": {
+    "title": "恭喜——您符合申请条件！",
+    "subtitle": "请查看以下付款说明以确认您的名额。",
+    "greeting": "亲爱的{name}，",
+    "eligible_message": "您已通过我们对瑞士青年职业签证研讨会的初步资格审查。",
+    "payment_title": "付款说明",
+    "payment_intro": "为确认您的名额，请将研讨会费用转至以下Wise账户：",
+    "price_label": "研讨会费用",
+    "date_label": "研讨会日期",
+    "reference_label": "转账备注",
+    "next_steps_title": "接下来怎么做？",
+    "next_steps": "一旦我们的团队确认您的付款，您将收到加入研讨会的Zoom链接。请允许1至2个工作日用于付款确认。",
+    "contact": "如有问题，请回复确认邮件或通过{email}联系我们。",
+    "check_email": "包含这些详情的确认邮件已发送至{email}。"
+  },
+  "legal": {
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "cookie": "Cookie政策",
+    "refund": "退款政策",
+    "disclaimer": "免责声明",
+    "lastUpdated": "最后更新"
+  },
+  "footer": {
+    "rights": "版权所有。",
+    "screening_note": "预审结果仅供参考，不构成签证批准。",
+    "brand": "瑞士青年职业签证"
+  },
+  "health": {
+    "ok": "服务运行正常"
+  },
+  "errors": {
+    "generic": "出现错误，请重试。",
+    "submission_failed": "您的提交无法处理，请重试。",
+    "network": "发生网络错误，请检查您的网络连接后重试。"
+  }
+}

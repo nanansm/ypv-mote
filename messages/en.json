@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "home": "Home",
+    "apply": "Apply Now",
+    "language": "Language"
+  },
+  "hero": {
+    "title": "Swiss Young Professional Visa",
+    "subtitle": "Pre-Screening Form",
+    "description": "Find out if you qualify for the Swiss Young Professional Visa program. Complete our short pre-screening form to check your eligibility.",
+    "cta": "Start Pre-Screening",
+    "disclaimer": "This is a pre-screening only. Passing does not guarantee visa approval."
+  },
+  "about": {
+    "title": "About the Webinar",
+    "description": "Our webinar provides in-depth guidance on the Swiss Young Professional Visa application process, requirements, and practical steps to maximise your chances of success.",
+    "points": {
+      "eligibility": "Understand the eligibility criteria",
+      "process": "Step-by-step application guidance",
+      "tips": "Practical tips from experienced advisors",
+      "qa": "Live Q&A session"
+    }
+  },
+  "form": {
+    "title": "Pre-Screening Form",
+    "subtitle": "Complete all sections to check your eligibility",
+    "section1": "Contact Information",
+    "section2": "Eligibility Check",
+    "section3": "Background Information",
+    "next": "Continue",
+    "back": "Back",
+    "submit": "Submit Application",
+    "submitting": "Submitting...",
+    "checking": "Checking eligibility...",
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "invalidDate": "Please enter a valid date",
+    "progress": "Step {current} of {total}",
+    "selectPlaceholder": "Select an option"
+  },
+  "rejection": {
+    "title": "Unfortunately, You Don't Qualify at This Time",
+    "subtitle": "Thank you for your interest in the Swiss Young Professional Visa program.",
+    "country_not_eligible": "We're sorry — your passport country ({country}) is not currently eligible for the Swiss Young Professional Visa program. The program is only open to nationals of specific partner countries.",
+    "age_out_of_range": "We're sorry — the Swiss Young Professional Visa has an age requirement of {min}–{max} years for {country} passport holders. Based on your date of birth, you are currently {age} years old.",
+    "vocational_training_required": "We're sorry — the Swiss Young Professional Visa requires applicants to have completed vocational training or a university degree. This is a mandatory requirement of the Swiss authorities.",
+    "field_interest_required": "We're sorry — the program requires participants to have a genuine interest in working in their field of study or training in Switzerland.",
+    "encouragement": "Immigration programs evolve. If your circumstances change, we encourage you to re-apply in the future.",
+    "contact": "If you believe this assessment is incorrect, please contact us.",
+    "back": "Return to Homepage"
+  },
+  "success": {
+    "title": "Congratulations — You're Eligible!",
+    "subtitle": "Please review your payment instructions below to secure your place.",
+    "greeting": "Dear {name},",
+    "eligible_message": "You have passed our initial eligibility check for the Swiss Young Professional Visa webinar.",
+    "payment_title": "Payment Instructions",
+    "payment_intro": "To secure your place, please transfer the webinar fee to the following Wise account:",
+    "price_label": "Webinar fee",
+    "date_label": "Webinar date",
+    "reference_label": "Transfer reference",
+    "next_steps_title": "What happens next?",
+    "next_steps": "Once your payment is verified by our team, you will receive the Zoom link to join the webinar. Please allow 1–2 business days for payment verification.",
+    "contact": "For questions, reply to the confirmation email or contact us at {email}.",
+    "check_email": "A confirmation email with these details has been sent to {email}."
+  },
+  "legal": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cookie": "Cookie Policy",
+    "refund": "Refund Policy",
+    "disclaimer": "Disclaimer",
+    "lastUpdated": "Last updated"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "screening_note": "Pre-screening results are indicative only and do not constitute visa approval.",
+    "brand": "Young Professional Visa Switzerland"
+  },
+  "health": {
+    "ok": "Service is healthy"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "submission_failed": "Your submission could not be processed. Please try again.",
+    "network": "A network error occurred. Please check your connection and try again."
+  }
+}

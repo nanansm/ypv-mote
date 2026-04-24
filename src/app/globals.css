@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-accent: #3c3489;
+  --color-accent-hover: #2e2770;
+  --color-bg-subtle: #fafaf9;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #5c5c5c;
+  --color-border: #e5e5e5;
+  --color-success: #0f6e56;
+  --color-error: #a32d2d;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2 {
+  font-family: "Instrument Serif", Georgia, serif;
+}
+
+/* Form field consistent height */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+select {
+  min-height: 44px;
+}

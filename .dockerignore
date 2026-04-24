@@ -1,0 +1,15 @@
+.git
+.gitignore
+.next
+node_modules
+npm-debug.log*
+.env
+.env.local
+.env.production
+data/
+*.db
+*.db-shm
+*.db-wal
+README.md
+TESTING.md
+docker-compose.yml
