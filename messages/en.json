@@ -5,21 +5,72 @@
     "language": "Language"
   },
   "hero": {
-    "title": "Swiss Young Professional Visa",
-    "subtitle": "Pre-Screening Form",
-    "description": "Find out if you qualify for the Swiss Young Professional Visa program. Complete our short pre-screening form to check your eligibility.",
-    "cta": "Start Pre-Screening",
-    "disclaimer": "This is a pre-screening only. Passing does not guarantee visa approval."
+    "eyebrow": "Swiss Young Professional Visa Program",
+    "title": "Your Path to Working in Switzerland",
+    "description": "We guide qualified young professionals from Asia through every step of the Swiss YPV application — so you arrive prepared, not guessing.",
+    "cta": "Check My Eligibility — Free",
+    "disclaimer": "Free pre-screening · Takes 3 minutes · No commitment required",
+    "trust": "Trusted by young professionals from Indonesia, China, and beyond",
+    "subtitle": "Pre-Screening Form"
+  },
+  "problem": {
+    "title": "The Swiss YPV Is Possible — But Easy to Get Wrong",
+    "body": "Most applicants from Asia struggle because they don't know the exact requirements, submit incomplete documents, or apply to the wrong canton. A single mistake can mean months of delays or outright rejection.",
+    "promise_title": "One webinar can save you months of confusion",
+    "promise_body": "Our specialist-led webinar walks you through the exact steps that lead to approval — tailored for applicants from Indonesia, China, and other Asian countries."
+  },
+  "eligibility_teaser": {
+    "title": "Is This Visa Right for You?",
+    "subtitle": "The Swiss YPV is designed for young professionals who meet these criteria:",
+    "age": "Aged 18–35 (age range varies by passport country)",
+    "passport": "Holds a passport from an eligible partner country",
+    "education": "Completed vocational training or holds a university degree",
+    "interest": "Intends to work in their field of study in Switzerland",
+    "cta": "Run the Free Eligibility Check",
+    "note": "Not sure? Our 3-minute pre-screening will tell you instantly."
   },
   "about": {
-    "title": "About the Webinar",
-    "description": "Our webinar provides in-depth guidance on the Swiss Young Professional Visa application process, requirements, and practical steps to maximise your chances of success.",
+    "title": "What You'll Learn in the Webinar",
+    "description": "A 2-hour live session covering everything you need to submit a strong Swiss YPV application — taught by a specialist with experience guiding Asian applicants.",
     "points": {
-      "eligibility": "Understand the eligibility criteria",
-      "process": "Step-by-step application guidance",
-      "tips": "Practical tips from experienced advisors",
-      "qa": "Live Q&A session"
+      "eligibility": "Exactly which documents Swiss authorities require",
+      "process": "Step-by-step application walkthrough for your specific country",
+      "tips": "Common reasons for rejection — and how to avoid each one",
+      "qa": "Live Q&A: your specific questions answered by a specialist"
     }
+  },
+  "process": {
+    "title": "How It Works",
+    "step1_title": "Complete the Free Pre-Screening",
+    "step1_desc": "Answer a few questions about your background. Takes 3 minutes.",
+    "step2_title": "Get Your Instant Result",
+    "step2_desc": "We'll tell you immediately whether you meet the basic eligibility criteria.",
+    "step3_title": "Secure Your Webinar Place",
+    "step3_desc": "Eligible applicants can book a seat and receive personalised step-by-step guidance."
+  },
+  "host": {
+    "title": "Your Guide Through the Process",
+    "name": "YPV Switzerland Advisors",
+    "bio": "Our advisors have helped young professionals from Indonesia, China, the Philippines, and other Asian countries navigate the Swiss Young Professional Visa program. We know the pitfalls, the paperwork, and what Swiss authorities look for — so you don't have to figure it out alone.",
+    "credential": "Specialist Swiss visa advisors"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "q1": "What is the Swiss Young Professional Visa?",
+    "a1": "The Swiss Young Professional Visa (YPV) is a permit that allows qualified young professionals from eligible non-EU countries to live and work in Switzerland for up to 18 months, gaining international career experience in their field.",
+    "q2": "Which countries are eligible?",
+    "a2": "Eligible countries include Indonesia, China, the Philippines, and several other nations. Use our free pre-screening to check your specific passport country instantly.",
+    "q3": "How much does the webinar cost?",
+    "a3": "Webinar fee details are provided after you complete the free pre-screening and receive your eligibility result. There is no cost to check your eligibility.",
+    "q4": "What if I'm not eligible right now?",
+    "a4": "We'll explain exactly why, and what could change your eligibility in the future. The pre-screening is always free and takes only 3 minutes.",
+    "q5": "Is this a guaranteed visa service?",
+    "a5": "No. We provide expert guidance and education — final visa decisions rest entirely with Swiss authorities. We help you build the strongest possible application."
+  },
+  "cta_section": {
+    "title": "Ready to Find Out If You Qualify?",
+    "body": "The pre-screening is free, takes 3 minutes, and gives you an instant result.",
+    "cta": "Start Free Pre-Screening"
   },
   "form": {
     "title": "Pre-Screening Form",

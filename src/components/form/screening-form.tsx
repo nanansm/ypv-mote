@@ -24,7 +24,12 @@ export type FormData = {
   professional_experience: string;
   diploma_in_english: string;
   current_location: string;
+  [key: string]: string;
 };
+
+const CORE_KEYS_S1 = new Set(["full_name", "email", "phone"]);
+const CORE_KEYS_S2 = new Set(["country", "date_of_birth", "vocational_training_completed", "interested_in_field"]);
+const CORE_KEYS_S3 = new Set(["english_level", "worked_abroad", "has_passport", "professional_experience", "diploma_in_english", "current_location"]);
 
 type Props = {
   section1Questions: Question[];
@@ -53,10 +58,10 @@ export function ScreeningForm({
   const { register, handleSubmit, watch, formState: { errors }, trigger, getValues } =
     useForm<FormData>({ mode: "onBlur" });
 
-  const stepFields: Record<number, (keyof FormData)[]> = {
-    1: ["full_name", "email", "phone"],
-    2: ["country", "date_of_birth", "vocational_training_completed", "interested_in_field"],
-    3: ["english_level", "worked_abroad", "has_passport", "professional_experience", "diploma_in_english", "current_location"],
+  const stepFields: Record<number, string[]> = {
+    1: section1Questions.map((q) => q.key),
+    2: section2Questions.map((q) => q.key),
+    3: section3Questions.map((q) => q.key),
   };
 
   async function handleNext() {
@@ -76,6 +81,14 @@ export function ScreeningForm({
     const values = getValues();
 
     try {
+      const allValues = values as Record<string, string>;
+      const extraResponses: Record<string, string> = {};
+      for (const q of [...section1Questions, ...section2Questions]) {
+        if (!CORE_KEYS_S1.has(q.key) && !CORE_KEYS_S2.has(q.key) && allValues[q.key] !== undefined) {
+          extraResponses[q.key] = allValues[q.key];
+        }
+      }
+
       const res = await fetch("/api/screen", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -89,6 +102,7 @@ export function ScreeningForm({
           vocationalTrainingCompleted:
             values.vocational_training_completed === "yes",
           interestedInField: values.interested_in_field === "yes",
+          ...(Object.keys(extraResponses).length > 0 ? { extraResponses } : {}),
         }),
       });
 
@@ -125,6 +139,14 @@ export function ScreeningForm({
     setServerError(null);
 
     try {
+      const allData = data as Record<string, string>;
+      const extraResponses: Record<string, string> = {};
+      for (const q of section3Questions) {
+        if (!CORE_KEYS_S3.has(q.key) && allData[q.key] !== undefined) {
+          extraResponses[q.key] = allData[q.key];
+        }
+      }
+
       const res = await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -136,6 +158,7 @@ export function ScreeningForm({
           professionalExperience: data.professional_experience,
           diplomaInEnglish: data.diploma_in_english === "yes" ? 1 : 0,
           currentLocation: data.current_location,
+          ...(Object.keys(extraResponses).length > 0 ? { extraResponses } : {}),
         }),
       });
 

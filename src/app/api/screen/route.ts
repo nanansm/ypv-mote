@@ -11,6 +11,11 @@ import {
 
 export async function POST(req: NextRequest) {
   try {
+    const CORE_KEYS = new Set([
+      "locale", "fullName", "email", "phone", "country",
+      "dateOfBirth", "vocationalTrainingCompleted", "interestedInField",
+    ]);
+
     const body = (await req.json()) as {
       locale: string;
       fullName: string;
@@ -20,6 +25,7 @@ export async function POST(req: NextRequest) {
       dateOfBirth: string;
       vocationalTrainingCompleted: boolean;
       interestedInField: boolean;
+      extraResponses?: Record<string, string>;
     };
 
     const rawConfig = db
@@ -50,6 +56,10 @@ export async function POST(req: NextRequest) {
     const now = new Date().toISOString();
     const age = calculateAge(body.dateOfBirth, new Date());
 
+    const extraJson = body.extraResponses && Object.keys(body.extraResponses).length > 0
+      ? JSON.stringify(body.extraResponses)
+      : null;
+
     db.insert(submissions)
       .values({
         id,
@@ -68,6 +78,7 @@ export async function POST(req: NextRequest) {
           ? null
           : JSON.stringify(result.reasonDetails),
         paymentStatus: "pending",
+        extraResponses: extraJson,
         createdAt: now,
         updatedAt: now,
       })

@@ -1,0 +1,1 @@
+ALTER TABLE `submissions` ADD `extra_responses` text;

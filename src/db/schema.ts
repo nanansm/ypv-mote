@@ -33,6 +33,8 @@ export const submissions = sqliteTable("submissions", {
   emailSentAt: text("email_sent_at"),
   sheetSyncedAt: text("sheet_synced_at"),
   adminNotes: text("admin_notes"),
+  extraResponses: text("extra_responses"),
+  deletedAt: text("deleted_at"),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
@@ -138,6 +140,7 @@ export const adminUsers = sqliteTable("admin_users", {
   name: text("name"),
   passwordHash: text("password_hash"),
   role: text("role").notNull().default("admin"),
+  mustChangePassword: integer("must_change_password").notNull().default(1),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
@@ -155,6 +158,7 @@ export const syncLogs = sqliteTable("sync_logs", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   submissionId: text("submission_id").notNull(),
   service: text("service").notNull(),
+  action: text("action").notNull().default("initial"),
   status: text("status").notNull(),
   errorMessage: text("error_message"),
   createdAt: text("created_at").notNull(),

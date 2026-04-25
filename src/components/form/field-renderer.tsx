@@ -14,7 +14,7 @@ type Props = {
 
 export function FieldRenderer({ question, register, errors }: Props) {
   const t = useTranslations("form");
-  const key = question.key as keyof FormData;
+  const key = question.key;
   const error = errors[key];
 
   return (

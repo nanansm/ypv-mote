@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
       professionalExperience: string;
       diplomaInEnglish: number;
       currentLocation: string;
+      extraResponses?: Record<string, string>;
     };
 
     const submission = db
@@ -33,6 +34,13 @@ export async function POST(req: NextRequest) {
 
     const now = new Date().toISOString();
 
+    // Merge extra responses from screen step (already in DB) with section-3 extras
+    const existingExtra: Record<string, string> = submission.extraResponses
+      ? JSON.parse(submission.extraResponses) as Record<string, string>
+      : {};
+    const merged = { ...existingExtra, ...(body.extraResponses ?? {}) };
+    const extraJson = Object.keys(merged).length > 0 ? JSON.stringify(merged) : null;
+
     db.update(submissions)
       .set({
         englishLevel: body.englishLevel,
@@ -41,6 +49,7 @@ export async function POST(req: NextRequest) {
         professionalExperience: body.professionalExperience,
         diplomaInEnglish: body.diplomaInEnglish,
         currentLocation: body.currentLocation,
+        extraResponses: extraJson,
         updatedAt: now,
       })
       .where(eq(submissions.id, body.partialSubmissionId))

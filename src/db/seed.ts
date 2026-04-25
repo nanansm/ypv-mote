@@ -417,7 +417,7 @@ async function seed() {
   }
 
   // ─── Legal Pages ───────────────────────────────────────────────────────────
-  const legalSlugs = ["privacy", "terms", "cookie", "refund", "disclaimer"] as const;
+  const legalSlugs = ["privacy", "terms", "cookie", "refund", "disclaimer", "success-page", "rejected-page"] as const;
   type LegalSlug = typeof legalSlugs[number];
 
   const legalContent: Record<
@@ -692,6 +692,66 @@ Refunds are issued in the original currency. Bank transfer fees are non-refundab
 
 退款以原始货币支付。银行转账手续费不予退还。`,
     },
+    "success-page": {
+      enTitle: "Success Page",
+      zhTitle: "成功页面",
+      enBody: `## Dear {name},
+
+You have passed our initial eligibility check for the Swiss Young Professional Visa webinar.
+
+## Payment Instructions
+
+To secure your place, please transfer the webinar fee to the following Wise account:
+
+{wise_details_block}
+
+**Transfer reference:** {wise_reference_instruction}
+
+**Webinar date:** {webinar_date} · **Fee:** {webinar_price}
+
+## What happens next?
+
+Once your payment is verified by our team, you will receive the Zoom link to join the webinar. Please allow 1–2 business days for payment verification.
+
+A confirmation email with these details has been sent to **{email}**.
+
+For questions, reply to the confirmation email or contact us at {admin_email}.`,
+      zhBody: `## 亲爱的 {name}，
+
+您已通过瑞士青年职业签证研讨会的初步资格审核。
+
+## 付款说明
+
+为保留您的席位，请将研讨会费用转账至以下 Wise 账户：
+
+{wise_details_block}
+
+**转账备注：** {wise_reference_instruction}
+
+**研讨会日期：** {webinar_date} · **费用：** {webinar_price}
+
+## 接下来会发生什么？
+
+我们的团队核实付款后，您将收到加入研讨会的 Zoom 链接。付款核实通常需要 1–2 个工作日。
+
+包含上述详情的确认邮件已发送至 **{email}**。
+
+如有疑问，请回复确认邮件或通过 {admin_email} 联系我们。`,
+    },
+    "rejected-page": {
+      enTitle: "Rejected Page",
+      zhTitle: "未通过页面",
+      enBody: `{rejection_reason}
+
+Immigration programs evolve. If your circumstances change, we encourage you to re-apply in the future.
+
+If you believe this assessment is incorrect, please contact us.`,
+      zhBody: `{rejection_reason}
+
+移民项目会不断发展变化。如果您的情况有所改变，我们鼓励您在未来重新申请。
+
+如果您认为此评估有误，请联系我们。`,
+    },
     disclaimer: {
       enTitle: "Disclaimer",
       zhTitle: "免责声明",
@@ -817,6 +877,29 @@ Reference note: {reference_instruction}
 Once your payment is verified, you will receive the Zoom link to join the webinar.
 
 If you have any questions, please reply to this email or contact us at {admin_email}.
+
+Warm regards,
+The YPV Switzerland Team`,
+    },
+    {
+      key: "zoom_link",
+      subject: "Your Zoom link for the YPV Switzerland Webinar",
+      bodyText: `Dear {name},
+
+Your payment has been confirmed. Here are your details to join the upcoming webinar.
+
+─────────────────────────────────────
+WEBINAR ACCESS
+─────────────────────────────────────
+Webinar: {webinar_name}
+Date: {webinar_date}
+Zoom link: {zoom_link}
+
+Please join 5 minutes before the start time.
+
+─────────────────────────────────────
+
+If you have any questions, reply to this email or contact us at {admin_email}.
 
 Warm regards,
 The YPV Switzerland Team`,
