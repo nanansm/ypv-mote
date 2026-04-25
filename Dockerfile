@@ -35,4 +35,5 @@ EXPOSE 3004
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
   CMD node -e "fetch('http://localhost:3004/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
+ENV HOSTNAME=0.0.0.0
 CMD ["node", "server.js"]
