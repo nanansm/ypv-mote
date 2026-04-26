@@ -107,7 +107,7 @@ async function seed() {
       isEligibilityGate: 0,
       validationRule: null,
       en: { label: "What is your full name?", placeholder: "John Smith", helpText: null },
-      zh: { label: "您的全名是什么？", placeholder: "张伟", helpText: null },
+      de: { label: "Wie lautet Ihr vollständiger Name?", placeholder: "Max Mustermann", helpText: null },
     },
     {
       key: "email",
@@ -118,7 +118,7 @@ async function seed() {
       isEligibilityGate: 0,
       validationRule: null,
       en: { label: "Your email address", placeholder: "you@example.com", helpText: null },
-      zh: { label: "您的电子邮箱", placeholder: "您@example.com", helpText: null },
+      de: { label: "Ihre E-Mail-Adresse", placeholder: "sie@beispiel.com", helpText: null },
     },
     {
       key: "phone",
@@ -129,7 +129,7 @@ async function seed() {
       isEligibilityGate: 0,
       validationRule: null,
       en: { label: "Your phone number", placeholder: "+41 xxx xxx xx xx", helpText: null },
-      zh: { label: "您的电话号码", placeholder: "+41 xxx xxx xx xx", helpText: null },
+      de: { label: "Ihre Telefonnummer", placeholder: "+41 xxx xxx xx xx", helpText: null },
     },
     // Section 2 — Eligibility Gate
     {
@@ -141,7 +141,7 @@ async function seed() {
       isEligibilityGate: 1,
       validationRule: null,
       en: { label: "Which country's passport do you hold?", placeholder: "Select your country", helpText: null },
-      zh: { label: "您持有哪个国家的护照？", placeholder: "选择您的国家", helpText: null },
+      de: { label: "Aus welchem Land ist Ihr Reisepass?", placeholder: "Land auswählen", helpText: null },
     },
     {
       key: "date_of_birth",
@@ -152,7 +152,7 @@ async function seed() {
       isEligibilityGate: 1,
       validationRule: JSON.stringify({ minAge: 14, maxAge: 100 }),
       en: { label: "Date of birth", placeholder: "YYYY-MM-DD", helpText: null },
-      zh: { label: "出生日期", placeholder: "YYYY-MM-DD", helpText: null },
+      de: { label: "Geburtsdatum", placeholder: "JJJJ-MM-TT", helpText: null },
     },
     {
       key: "vocational_training_completed",
@@ -168,11 +168,11 @@ async function seed() {
         helpText:
           "Apprenticeship, university of applied sciences, university, SMK (Indonesia). US/Canada students admitted; US apprentices with 2+ years in relevant occupation admitted.",
       },
-      zh: {
-        label: "您是否完成了职业培训或大学学历？",
+      de: {
+        label: "Haben Sie eine Berufsausbildung oder ein Hochschulstudium abgeschlossen?",
         placeholder: null,
         helpText:
-          "学徒制、应用科学大学、普通大学、SMK（印度尼西亚）。美国/加拿大学生可申请；在相关职业有2年以上工作经验的美国学徒可申请。",
+          "Berufslehre, Fachhochschule, Universität, SMK (Indonesien). Studierende aus den USA/Kanada zugelassen; Lehrlinge aus den USA mit mindestens zwei Jahren Berufserfahrung im relevanten Beruf zugelassen.",
       },
     },
     {
@@ -184,7 +184,7 @@ async function seed() {
       isEligibilityGate: 1,
       validationRule: null,
       en: { label: "Are you interested in working in your field of study?", placeholder: null, helpText: null },
-      zh: { label: "您是否有兴趣在您所学专业领域工作？", placeholder: null, helpText: null },
+      de: { label: "Möchten Sie in Ihrem Studienfeld arbeiten?", placeholder: null, helpText: null },
     },
     // Section 3 — General Info
     {
@@ -196,7 +196,7 @@ async function seed() {
       isEligibilityGate: 0,
       validationRule: null,
       en: { label: "What is your English proficiency level?", placeholder: null, helpText: null },
-      zh: { label: "您的英语水平如何？", placeholder: null, helpText: null },
+      de: { label: "Wie schätzen Sie Ihre Englischkenntnisse ein?", placeholder: null, helpText: null },
     },
     {
       key: "worked_abroad",
@@ -207,7 +207,7 @@ async function seed() {
       isEligibilityGate: 0,
       validationRule: null,
       en: { label: "Have you worked abroad before?", placeholder: null, helpText: null },
-      zh: { label: "您是否有在海外工作的经历？", placeholder: null, helpText: null },
+      de: { label: "Haben Sie bereits im Ausland gearbeitet?", placeholder: null, helpText: null },
     },
     {
       key: "has_passport",
@@ -218,7 +218,7 @@ async function seed() {
       isEligibilityGate: 0,
       validationRule: null,
       en: { label: "Do you currently have a valid passport?", placeholder: null, helpText: null },
-      zh: { label: "您目前是否持有有效护照？", placeholder: null, helpText: null },
+      de: { label: "Verfügen Sie aktuell über einen gültigen Reisepass?", placeholder: null, helpText: null },
     },
     {
       key: "professional_experience",
@@ -229,7 +229,7 @@ async function seed() {
       isEligibilityGate: 0,
       validationRule: null,
       en: { label: "How much professional experience do you have?", placeholder: null, helpText: null },
-      zh: { label: "您有多少年的专业工作经验？", placeholder: null, helpText: null },
+      de: { label: "Wie viel Berufserfahrung haben Sie?", placeholder: null, helpText: null },
     },
     {
       key: "diploma_in_english",
@@ -240,7 +240,7 @@ async function seed() {
       isEligibilityGate: 0,
       validationRule: null,
       en: { label: "Is your diploma / degree certificate in English?", placeholder: null, helpText: null },
-      zh: { label: "您的文凭/学位证书是英文版本吗？", placeholder: null, helpText: null },
+      de: { label: "Ist Ihr Diplom bzw. Ihre Studienurkunde auf Englisch ausgestellt?", placeholder: null, helpText: null },
     },
     {
       key: "current_location",
@@ -251,69 +251,69 @@ async function seed() {
       isEligibilityGate: 0,
       validationRule: null,
       en: { label: "Where are you currently located?", placeholder: null, helpText: null },
-      zh: { label: "您目前在哪里？", placeholder: null, helpText: null },
+      de: { label: "Wo befinden Sie sich derzeit?", placeholder: null, helpText: null },
     },
   ];
 
   const questionOptions_data: Record<
     string,
-    { value: string; order: number; en: string; zh: string }[]
+    { value: string; order: number; en: string; de: string }[]
   > = {
     country: [
-      { value: "Argentina", order: 1, en: "Argentina", zh: "阿根廷" },
-      { value: "Australia", order: 2, en: "Australia", zh: "澳大利亚" },
-      { value: "Canada", order: 3, en: "Canada", zh: "加拿大" },
-      { value: "Chile", order: 4, en: "Chile", zh: "智利" },
-      { value: "Indonesia", order: 5, en: "Indonesia", zh: "印度尼西亚" },
-      { value: "Japan", order: 6, en: "Japan", zh: "日本" },
-      { value: "Monaco", order: 7, en: "Monaco", zh: "摩纳哥" },
-      { value: "New Zealand", order: 8, en: "New Zealand", zh: "新西兰" },
-      { value: "Philippines", order: 9, en: "Philippines", zh: "菲律宾" },
-      { value: "Russia", order: 10, en: "Russia", zh: "俄罗斯" },
-      { value: "San Marino", order: 11, en: "San Marino", zh: "圣马力诺" },
-      { value: "South Africa", order: 12, en: "South Africa", zh: "南非" },
-      { value: "Tunisia", order: 13, en: "Tunisia", zh: "突尼斯" },
-      { value: "Ukraine", order: 14, en: "Ukraine", zh: "乌克兰" },
-      { value: "USA", order: 15, en: "USA", zh: "美国" },
-      { value: "Others", order: 16, en: "Others", zh: "其他" },
+      { value: "Argentina", order: 1, en: "Argentina", de: "Argentinien" },
+      { value: "Australia", order: 2, en: "Australia", de: "Australien" },
+      { value: "Canada", order: 3, en: "Canada", de: "Kanada" },
+      { value: "Chile", order: 4, en: "Chile", de: "Chile" },
+      { value: "Indonesia", order: 5, en: "Indonesia", de: "Indonesien" },
+      { value: "Japan", order: 6, en: "Japan", de: "Japan" },
+      { value: "Monaco", order: 7, en: "Monaco", de: "Monaco" },
+      { value: "New Zealand", order: 8, en: "New Zealand", de: "Neuseeland" },
+      { value: "Philippines", order: 9, en: "Philippines", de: "Philippinen" },
+      { value: "Russia", order: 10, en: "Russia", de: "Russland" },
+      { value: "San Marino", order: 11, en: "San Marino", de: "San Marino" },
+      { value: "South Africa", order: 12, en: "South Africa", de: "Südafrika" },
+      { value: "Tunisia", order: 13, en: "Tunisia", de: "Tunesien" },
+      { value: "Ukraine", order: 14, en: "Ukraine", de: "Ukraine" },
+      { value: "USA", order: 15, en: "USA", de: "USA" },
+      { value: "Others", order: 16, en: "Others", de: "Andere" },
     ],
     vocational_training_completed: [
-      { value: "yes", order: 1, en: "Yes", zh: "是" },
-      { value: "no", order: 2, en: "No", zh: "否" },
+      { value: "yes", order: 1, en: "Yes", de: "Ja" },
+      { value: "no", order: 2, en: "No", de: "Nein" },
     ],
     interested_in_field: [
-      { value: "yes", order: 1, en: "Yes", zh: "是" },
-      { value: "no", order: 2, en: "No", zh: "否" },
+      { value: "yes", order: 1, en: "Yes", de: "Ja" },
+      { value: "no", order: 2, en: "No", de: "Nein" },
     ],
     english_level: [
-      { value: "beginner", order: 1, en: "Beginner (A1–A2)", zh: "初级（A1–A2）" },
-      { value: "intermediate", order: 2, en: "Intermediate (B1–B2)", zh: "中级（B1–B2）" },
-      { value: "advanced", order: 3, en: "Advanced (C1–C2)", zh: "高级（C1–C2）" },
-      { value: "none", order: 4, en: "I don't speak English", zh: "我不会英语" },
+      { value: "beginner", order: 1, en: "Beginner (A1–A2)", de: "Anfänger (A1–A2)" },
+      { value: "intermediate", order: 2, en: "Intermediate (B1–B2)", de: "Mittelstufe (B1–B2)" },
+      { value: "advanced", order: 3, en: "Advanced (C1–C2)", de: "Fortgeschritten (C1–C2)" },
+      { value: "none", order: 4, en: "I don't speak English", de: "Ich spreche kein Englisch" },
     ],
     worked_abroad: [
-      { value: "yes", order: 1, en: "Yes", zh: "是" },
-      { value: "no", order: 2, en: "No", zh: "否" },
+      { value: "yes", order: 1, en: "Yes", de: "Ja" },
+      { value: "no", order: 2, en: "No", de: "Nein" },
     ],
     has_passport: [
-      { value: "yes", order: 1, en: "Yes, I have a valid passport", zh: "是，我有有效护照" },
-      { value: "no", order: 2, en: "No", zh: "否" },
-      { value: "plan_to_make", order: 3, en: "Not yet, but I plan to apply for one", zh: "暂无，但我计划申请" },
+      { value: "yes", order: 1, en: "Yes, I have a valid passport", de: "Ja, ich habe einen gültigen Reisepass" },
+      { value: "no", order: 2, en: "No", de: "Nein" },
+      { value: "plan_to_make", order: 3, en: "Not yet, but I plan to apply for one", de: "Noch nicht, aber ich plane, einen zu beantragen" },
     ],
     professional_experience: [
-      { value: "fresh_graduate", order: 1, en: "Fresh graduate / no experience", zh: "应届毕业生/无工作经验" },
-      { value: "1_2_years", order: 2, en: "1–2 years", zh: "1–2年" },
-      { value: "2_3_years", order: 3, en: "2–3 years", zh: "2–3年" },
-      { value: "3_5_years", order: 4, en: "3–5 years", zh: "3–5年" },
-      { value: "5_plus_years", order: 5, en: "5+ years", zh: "5年以上" },
+      { value: "fresh_graduate", order: 1, en: "Fresh graduate / no experience", de: "Berufseinsteiger:in / keine Erfahrung" },
+      { value: "1_2_years", order: 2, en: "1–2 years", de: "1–2 Jahre" },
+      { value: "2_3_years", order: 3, en: "2–3 years", de: "2–3 Jahre" },
+      { value: "3_5_years", order: 4, en: "3–5 years", de: "3–5 Jahre" },
+      { value: "5_plus_years", order: 5, en: "5+ years", de: "Mehr als 5 Jahre" },
     ],
     diploma_in_english: [
-      { value: "yes", order: 1, en: "Yes", zh: "是" },
-      { value: "no", order: 2, en: "No", zh: "否" },
+      { value: "yes", order: 1, en: "Yes", de: "Ja" },
+      { value: "no", order: 2, en: "No", de: "Nein" },
     ],
     current_location: [
-      { value: "own_country", order: 1, en: "In my home country", zh: "在我的祖国" },
-      { value: "abroad", order: 2, en: "Abroad", zh: "在海外" },
+      { value: "own_country", order: 1, en: "In my home country", de: "In meinem Heimatland" },
+      { value: "abroad", order: 2, en: "Abroad", de: "Im Ausland" },
     ],
   };
 
@@ -347,8 +347,8 @@ async function seed() {
     }
 
     // Insert question translations
-    for (const locale of ["en", "zh"] as const) {
-      const t = locale === "en" ? q.en : q.zh;
+    for (const locale of ["en", "de"] as const) {
+      const t = locale === "en" ? q.en : q.de;
       const existingT = db
         .select()
         .from(questionTranslations)
@@ -392,8 +392,8 @@ async function seed() {
       }
 
       // Option translations
-      for (const locale of ["en", "zh"] as const) {
-        const label = locale === "en" ? opt.en : opt.zh;
+      for (const locale of ["en", "de"] as const) {
+        const label = locale === "en" ? opt.en : opt.de;
         const existingOT = db
           .select()
           .from(questionTranslations)
@@ -422,11 +422,11 @@ async function seed() {
 
   const legalContent: Record<
     LegalSlug,
-    { enTitle: string; zhTitle: string; enBody: string; zhBody: string }
+    { enTitle: string; deTitle: string; enBody: string; deBody: string }
   > = {
     privacy: {
       enTitle: "Privacy Policy",
-      zhTitle: "隐私政策",
+      deTitle: "Datenschutzerklärung",
       enBody: `[REVIEW WITH LAWYER BEFORE PUBLISHING]
 
 # Privacy Policy
@@ -448,7 +448,7 @@ When you complete the pre-screening form, we collect:
 ## 2. How We Use Your Data
 
 Your data is used solely to:
-- Assess your eligibility for the Swiss Young Professional Visa webinar
+- Assess your eligibility for the Young Professional Visa Switzerland webinar
 - Send you payment and webinar access instructions
 - Maintain our records for legitimate business purposes
 
@@ -468,50 +468,50 @@ Under GDPR, you have the right to: access, rectify, erase, restrict, and port yo
 
 For data protection queries: [ADMIN EMAIL - TO BE CONFIGURED]`,
 
-      zhBody: `[发布前请律师审阅]
+      deBody: `[VOR DER VERÖFFENTLICHUNG VON ANWALT PRÜFEN LASSEN]
 
-# 隐私政策
+# Datenschutzerklärung
 
-*最后更新：[日期]*
+*Zuletzt aktualisiert: [DATUM]*
 
-瑞士青年职业签证预筛选表格（"我们"）致力于按照《通用数据保护条例》（GDPR）及适用数据保护法律保护您的个人数据。
+Das Young Professional Visa Schweiz Vorprüfungsformular ("wir", "uns") setzt sich gemäss der Datenschutz-Grundverordnung (DSGVO) und dem geltenden Datenschutzrecht für den Schutz Ihrer personenbezogenen Daten ein.
 
-## 1. 我们收集的数据
+## 1. Erhobene Daten
 
-当您填写预筛选表格时，我们收集以下信息：
-- 全名
-- 电子邮箱地址
-- 电话号码
-- 出生日期
-- 护照国籍
-- 教育和职业背景信息
+Wenn Sie das Vorprüfungsformular ausfüllen, erheben wir:
+- Vollständiger Name
+- E-Mail-Adresse
+- Telefonnummer
+- Geburtsdatum
+- Land des Reisepasses
+- Angaben zu Ausbildung und beruflichem Werdegang
 
-## 2. 数据使用方式
+## 2. Verwendung der Daten
 
-您的数据仅用于：
-- 评估您参加瑞士青年职业签证研讨会的资格
-- 向您发送付款及研讨会访问说明
-- 出于合法商业目的维护我们的记录
+Ihre Daten werden ausschliesslich verwendet, um:
+- Ihre Eignung für das Young Professional Visa Schweiz Webinar zu prüfen
+- Ihnen Zahlungs- und Zugangsanweisungen für das Webinar zu senden
+- Unsere Aufzeichnungen für berechtigte geschäftliche Zwecke zu führen
 
-## 3. 数据存储
+## 3. Datenspeicherung
 
-您的数据安全存储在我们的服务器上，经您同意后，也可存储在仅授权管理员可访问的Google表格中。
+Ihre Daten werden sicher auf unseren Servern gespeichert und – mit Ihrer Einwilligung – in einer Google-Sheets-Tabelle, die nur autorisierten Administratoren zugänglich ist.
 
-## 4. 数据保留期
+## 4. Speicherdauer
 
-我们在提交后最多保留您的数据24个月。您可随时联系我们请求删除。
+Wir bewahren Ihre Daten bis zu 24 Monate nach Einreichung auf. Sie können jederzeit eine Löschung verlangen.
 
-## 5. 您的权利
+## 5. Ihre Rechte
 
-根据GDPR，您有权访问、更正、删除、限制处理和转移您的数据。如需行使这些权利，请通过以下联系方式联系我们。
+Gemäss DSGVO haben Sie das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung und Übertragung Ihrer Daten. Wenden Sie sich dafür an die untenstehende Adresse.
 
-## 6. 联系方式
+## 6. Kontakt
 
-数据保护咨询：[管理员邮箱 - 待配置]`,
+Anfragen zum Datenschutz: [ADMIN-E-MAIL – NOCH ZU KONFIGURIEREN]`,
     },
     terms: {
       enTitle: "Terms of Service",
-      zhTitle: "服务条款",
+      deTitle: "Nutzungsbedingungen",
       enBody: `[REVIEW WITH LAWYER BEFORE PUBLISHING]
 
 # Terms of Service
@@ -522,7 +522,7 @@ By submitting the pre-screening form and making payment, you agree to the follow
 
 ## 1. Service Description
 
-We provide an informational webinar about the Swiss Young Professional Visa program. This is an educational service only — we are not a visa agency and do not guarantee any visa outcome.
+We provide an informational webinar about the Young Professional Visa Switzerland program. This is an educational service only — we are not a visa agency and do not guarantee any visa outcome.
 
 ## 2. Eligibility Pre-Screening
 
@@ -548,45 +548,45 @@ We are not liable for decisions made by immigration authorities. Information pro
 
 These terms are governed by Swiss law.`,
 
-      zhBody: `[发布前请律师审阅]
+      deBody: `[VOR DER VERÖFFENTLICHUNG VON ANWALT PRÜFEN LASSEN]
 
-# 服务条款
+# Nutzungsbedingungen
 
-*最后更新：[日期]*
+*Zuletzt aktualisiert: [DATUM]*
 
-提交预筛选表格并完成付款，即表示您同意以下条款。
+Mit dem Einreichen des Vorprüfungsformulars und der Zahlung stimmen Sie den folgenden Bedingungen zu.
 
-## 1. 服务说明
+## 1. Leistungsbeschreibung
 
-我们提供有关瑞士青年职业签证项目的信息性研讨会。这仅为教育服务——我们不是签证代理机构，不保证任何签证结果。
+Wir bieten ein informatives Webinar zum Young Professional Visa Schweiz Programm an. Es handelt sich ausschliesslich um eine Bildungsleistung — wir sind keine Visumsagentur und garantieren kein Visumsergebnis.
 
-## 2. 资格预审
+## 2. Eignungs-Vorprüfung
 
-通过我们的预审并不保证签证获批。最终资格由瑞士当局单独决定。
+Das Bestehen unserer Vorprüfung garantiert keine Visumsbewilligung. Die endgültige Eignung wird ausschliesslich von den Schweizer Behörden festgelegt.
 
-## 3. 付款
+## 3. Zahlung
 
-参加研讨会需要付款。取消相关详情请参阅我们的退款政策。
+Für die Teilnahme am Webinar ist eine Zahlung erforderlich. Einzelheiten zu Stornierungen finden Sie in unserer Rückerstattungsrichtlinie.
 
-## 4. 行为规范
+## 4. Verhalten
 
-参与者同意在研讨会期间保持尊重的态度。我们保留对行为扰乱参与者的驱逐权利。
+Teilnehmende verpflichten sich zu einem respektvollen Umgang während des Webinars. Wir behalten uns vor, Teilnehmende mit störendem Verhalten zu entfernen.
 
-## 5. 知识产权
+## 5. Geistiges Eigentum
 
-所有研讨会内容均受版权保护。未经书面同意，禁止录制、复制或分发。
+Alle Webinarinhalte sind urheberrechtlich geschützt. Aufnahmen, Vervielfältigungen oder Weitergaben sind ohne schriftliche Zustimmung untersagt.
 
-## 6. 责任限制
+## 6. Haftungsbeschränkung
 
-我们对移民当局的决定不承担任何责任。所提供的信息仅供教育目的使用。
+Wir haften nicht für Entscheidungen der Migrationsbehörden. Die bereitgestellten Informationen dienen ausschliesslich Bildungszwecken.
 
-## 7. 适用法律
+## 7. Anwendbares Recht
 
-本条款受瑞士法律管辖。`,
+Diese Bedingungen unterliegen dem Schweizer Recht.`,
     },
     cookie: {
       enTitle: "Cookie Policy",
-      zhTitle: "Cookie政策",
+      deTitle: "Cookie-Richtlinie",
       enBody: `[REVIEW WITH LAWYER BEFORE PUBLISHING]
 
 # Cookie Policy
@@ -611,33 +611,33 @@ You can disable cookies in your browser settings. Note that disabling session co
 
 For cookie-related queries: [ADMIN EMAIL - TO BE CONFIGURED]`,
 
-      zhBody: `[发布前请律师审阅]
+      deBody: `[VOR DER VERÖFFENTLICHUNG VON ANWALT PRÜFEN LASSEN]
 
-# Cookie政策
+# Cookie-Richtlinie
 
-*最后更新：[日期]*
+*Zuletzt aktualisiert: [DATUM]*
 
-## 什么是Cookie
+## Was sind Cookies
 
-Cookie是您访问我们网站时放置在您设备上的小型文本文件。
+Cookies sind kleine Textdateien, die beim Besuch unserer Website auf Ihrem Gerät gespeichert werden.
 
-## 我们使用的Cookie
+## Verwendete Cookies
 
-**会话Cookie（必要）：** 我们使用单个会话Cookie来维持您的表格填写进度，未来也用于支持管理员登录。此Cookie是严格必要的，无法禁用。
+**Sitzungs-Cookies (notwendig):** Wir verwenden ein einziges Sitzungs-Cookie, um Ihren Formularfortschritt zu speichern und künftig die Administrator-Anmeldung zu unterstützen. Dieses Cookie ist zwingend erforderlich und kann nicht deaktiviert werden.
 
-我们不使用跟踪Cookie、广告Cookie或第三方分析Cookie。
+Wir setzen keine Tracking-Cookies, Werbe-Cookies oder Analyse-Cookies von Dritten ein.
 
-## 管理Cookie
+## Cookies verwalten
 
-您可以在浏览器设置中禁用Cookie。请注意，禁用会话Cookie将导致表格无法正常运行。
+Sie können Cookies in den Einstellungen Ihres Browsers deaktivieren. Beachten Sie, dass das Deaktivieren der Sitzungs-Cookies den ordnungsgemässen Betrieb des Formulars verhindert.
 
-## 联系方式
+## Kontakt
 
-Cookie相关咨询：[管理员邮箱 - 待配置]`,
+Anfragen zu Cookies: [ADMIN-E-MAIL – NOCH ZU KONFIGURIEREN]`,
     },
     refund: {
       enTitle: "Refund Policy",
-      zhTitle: "退款政策",
+      deTitle: "Rückerstattungsrichtlinie",
       enBody: `[REVIEW WITH LAWYER BEFORE PUBLISHING]
 
 # Refund Policy
@@ -665,39 +665,39 @@ To request a refund, contact us at [ADMIN EMAIL - TO BE CONFIGURED] with your su
 
 Refunds are issued in the original currency. Bank transfer fees are non-refundable.`,
 
-      zhBody: `[发布前请律师审阅]
+      deBody: `[VOR DER VERÖFFENTLICHUNG VON ANWALT PRÜFEN LASSEN]
 
-# 退款政策
+# Rückerstattungsrichtlinie
 
-*最后更新：[日期]*
+*Zuletzt aktualisiert: [DATUM]*
 
-## 退款资格
+## Anspruch auf Rückerstattung
 
-以下情况可获全额退款：
-- 您在预定研讨会日期至少48小时前提出退款申请
-- 研讨会因我方原因取消
+Eine vollständige Rückerstattung ist möglich, wenn:
+- Sie die Rückerstattung mindestens 48 Stunden vor dem geplanten Webinardatum anfragen
+- Das Webinar von uns aus irgendeinem Grund abgesagt wird
 
-## 不可退款情况
+## Nicht erstattungsfähig
 
-以下情况我们无法提供退款：
-- 在研讨会开始前48小时内提出申请
-- 因个人原因无法参加（网络问题、时间冲突等）
-- 您已经参加了研讨会
+Wir können keine Rückerstattung gewähren, wenn:
+- Die Anfrage weniger als 48 Stunden vor dem Webinar erfolgt
+- Sie aus persönlichen Gründen nicht teilnehmen konnten (Internetprobleme, Terminkonflikte usw.)
+- Sie das Webinar bereits besucht haben
 
-## 申请流程
+## Ablauf
 
-如需申请退款，请发送邮件至 [管理员邮箱 - 待配置]，附上您的提交ID和付款凭证。退款将在7个工作日内处理。
+Senden Sie für eine Rückerstattung eine E-Mail an [ADMIN-E-MAIL – NOCH ZU KONFIGURIEREN] mit Ihrer Einreichungs-ID und einem Zahlungsnachweis. Rückerstattungen werden innerhalb von 7 Werktagen bearbeitet.
 
-## 货币及手续费
+## Währung & Gebühren
 
-退款以原始货币支付。银行转账手续费不予退还。`,
+Rückerstattungen erfolgen in der ursprünglichen Währung. Bankgebühren werden nicht erstattet.`,
     },
     "success-page": {
       enTitle: "Success Page",
-      zhTitle: "成功页面",
+      deTitle: "Erfolgsseite",
       enBody: `## Dear {name},
 
-You have passed our initial eligibility check for the Swiss Young Professional Visa webinar.
+You have passed our initial eligibility check for the Young Professional Visa Switzerland webinar.
 
 ## Payment Instructions
 
@@ -716,45 +716,45 @@ Once your payment is verified by our team, you will receive the Zoom link to joi
 A confirmation email with these details has been sent to **{email}**.
 
 For questions, reply to the confirmation email or contact us at {admin_email}.`,
-      zhBody: `## 亲爱的 {name}，
+      deBody: `## Liebe/r {name},
 
-您已通过瑞士青年职业签证研讨会的初步资格审核。
+Sie haben unsere erste Eignungsprüfung für das Young Professional Visa Schweiz Webinar bestanden.
 
-## 付款说明
+## Zahlungsanweisungen
 
-为保留您的席位，请将研讨会费用转账至以下 Wise 账户：
+Um Ihren Platz zu sichern, überweisen Sie bitte die Webinargebühr auf das folgende Wise-Konto:
 
 {wise_details_block}
 
-**转账备注：** {wise_reference_instruction}
+**Verwendungszweck:** {wise_reference_instruction}
 
-**研讨会日期：** {webinar_date} · **费用：** {webinar_price}
+**Webinardatum:** {webinar_date} · **Gebühr:** {webinar_price}
 
-## 接下来会发生什么？
+## Wie geht es weiter?
 
-我们的团队核实付款后，您将收到加入研讨会的 Zoom 链接。付款核实通常需要 1–2 个工作日。
+Sobald Ihre Zahlung von unserem Team bestätigt wurde, erhalten Sie den Zoom-Link zur Teilnahme am Webinar. Bitte rechnen Sie für die Zahlungsbestätigung mit 1–2 Werktagen.
 
-包含上述详情的确认邮件已发送至 **{email}**。
+Eine Bestätigungs-E-Mail mit diesen Angaben wurde an **{email}** gesendet.
 
-如有疑问，请回复确认邮件或通过 {admin_email} 联系我们。`,
+Bei Fragen antworten Sie auf die Bestätigungs-E-Mail oder kontaktieren Sie uns unter {admin_email}.`,
     },
     "rejected-page": {
       enTitle: "Rejected Page",
-      zhTitle: "未通过页面",
+      deTitle: "Ablehnungsseite",
       enBody: `{rejection_reason}
 
 Immigration programs evolve. If your circumstances change, we encourage you to re-apply in the future.
 
 If you believe this assessment is incorrect, please contact us.`,
-      zhBody: `{rejection_reason}
+      deBody: `{rejection_reason}
 
-移民项目会不断发展变化。如果您的情况有所改变，我们鼓励您在未来重新申请。
+Migrationsprogramme entwickeln sich weiter. Wenn sich Ihre Situation ändert, ermutigen wir Sie zu einer erneuten Bewerbung in der Zukunft.
 
-如果您认为此评估有误，请联系我们。`,
+Wenn Sie der Meinung sind, dass diese Beurteilung nicht korrekt ist, kontaktieren Sie uns bitte.`,
     },
     disclaimer: {
       enTitle: "Disclaimer",
-      zhTitle: "免责声明",
+      deTitle: "Haftungsausschluss",
       enBody: `[REVIEW WITH LAWYER BEFORE PUBLISHING]
 
 # Disclaimer
@@ -767,11 +767,11 @@ The information provided through our pre-screening form, webinar, and any relate
 
 ## No Guarantee of Visa Approval
 
-Passing our pre-screening eligibility check does not guarantee that you will receive a Swiss Young Professional Visa. All visa decisions are made solely and exclusively by the relevant Swiss immigration authorities. We have no influence over these decisions.
+Passing our pre-screening eligibility check does not guarantee that you will receive a Young Professional Visa Switzerland. All visa decisions are made solely and exclusively by the relevant Swiss immigration authorities. We have no influence over these decisions.
 
 ## Accuracy of Information
 
-While we strive to provide accurate and up-to-date information about the Swiss Young Professional Visa program, immigration regulations change frequently. Always verify current requirements with the official Swiss immigration authorities.
+While we strive to provide accurate and up-to-date information about the Young Professional Visa Switzerland program, immigration regulations change frequently. Always verify current requirements with the official Swiss immigration authorities.
 
 ## Professional Advice
 
@@ -781,31 +781,31 @@ For your specific situation, we strongly recommend consulting a qualified immigr
 
 To the maximum extent permitted by law, we disclaim all liability arising from reliance on information provided through our service.`,
 
-      zhBody: `[发布前请律师审阅]
+      deBody: `[VOR DER VERÖFFENTLICHUNG VON ANWALT PRÜFEN LASSEN]
 
-# 免责声明
+# Haftungsausschluss
 
-*最后更新：[日期]*
+*Zuletzt aktualisiert: [DATUM]*
 
-## 非法律或移民建议
+## Keine Rechts- oder Migrationsberatung
 
-通过我们的预筛选表格、研讨会及相关沟通提供的信息仅供教育和参考目的。这不构成法律建议或移民建议。
+Die über unser Vorprüfungsformular, das Webinar und alle damit verbundenen Kommunikationen bereitgestellten Informationen dienen ausschliesslich Bildungs- und Informationszwecken. Sie stellen keine Rechtsberatung und keine Migrationsberatung dar.
 
-## 不保证签证获批
+## Keine Garantie für eine Visumsbewilligung
 
-通过我们的预筛选资格审查并不保证您能获得瑞士青年职业签证。所有签证决定完全由相关瑞士移民机构单独做出。我们对这些决定没有任何影响力。
+Das Bestehen unserer Eignungs-Vorprüfung garantiert nicht den Erhalt eines Young Professional Visa Schweiz. Alle Visumsentscheidungen werden ausschliesslich von den zuständigen Schweizer Migrationsbehörden getroffen. Auf diese Entscheidungen haben wir keinen Einfluss.
 
-## 信息准确性
+## Richtigkeit der Informationen
 
-虽然我们努力提供有关瑞士青年职业签证项目的准确和最新信息，但移民法规经常变化。请务必向官方瑞士移民机构核实最新要求。
+Wir bemühen uns um genaue und aktuelle Informationen zum Young Professional Visa Schweiz Programm. Migrationsbestimmungen ändern sich jedoch häufig. Überprüfen Sie aktuelle Anforderungen stets bei den offiziellen Schweizer Migrationsbehörden.
 
-## 专业建议
+## Fachliche Beratung
 
-对于您的具体情况，我们强烈建议咨询有资质的移民律师或官方移民顾问。
+Für Ihre individuelle Situation empfehlen wir dringend, eine qualifizierte Migrationsanwältin bzw. einen qualifizierten Migrationsanwalt oder eine offizielle Migrationsberatungsstelle zu konsultieren.
 
-## 责任限制
+## Haftungsbeschränkung
 
-在法律允许的最大范围内，我们对因依赖我们服务提供的信息而产生的任何损失不承担责任。`,
+Im gesetzlich höchstzulässigen Umfang lehnen wir jede Haftung ab, die aus dem Vertrauen auf die über unseren Dienst bereitgestellten Informationen entsteht.`,
     },
   };
 
@@ -831,7 +831,7 @@ To the maximum extent permitted by law, we disclaim all liability arising from r
     const content = legalContent[slug];
     for (const { locale, title, body } of [
       { locale: "en", title: content.enTitle, body: content.enBody },
-      { locale: "zh", title: content.zhTitle, body: content.zhBody },
+      { locale: "de", title: content.deTitle, body: content.deBody },
     ]) {
       const existingTrans = db
         .select()
@@ -851,12 +851,14 @@ To the maximum extent permitted by law, we disclaim all liability arising from r
   const templates = [
     {
       key: "eligible_participant",
-      subject: "You're eligible — here are your payment details for the YPV Switzerland Webinar",
+      subject: "You're eligible — payment details for the YPV Switzerland Webinar",
       bodyText: `Dear {name},
 
 Thank you for completing the pre-screening form for the Young Professional Visa Switzerland webinar.
 
-We are pleased to confirm that you meet the initial eligibility criteria. To secure your place, please complete your payment using the Wise bank transfer details below.
+We're pleased to confirm that you meet the initial eligibility criteria. To secure your place, please complete your payment using the Wise bank transfer details below.
+
+This webinar is led by a Young Professional Visa holder who has successfully secured an opportunity in Switzerland and guided applicants from non-European countries through the process. Everything we share is based on real experience.
 
 ─────────────────────────────────────
 WEBINAR DETAILS
@@ -886,7 +888,7 @@ The YPV Switzerland Team`,
       subject: "Your Zoom link for the YPV Switzerland Webinar",
       bodyText: `Dear {name},
 
-Your payment has been confirmed. Here are your details to join the upcoming webinar.
+Your payment has been confirmed. Below are the details to join the upcoming webinar.
 
 ─────────────────────────────────────
 WEBINAR ACCESS

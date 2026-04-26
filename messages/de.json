@@ -1,0 +1,134 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "apply": "Jetzt bewerben",
+    "language": "Sprache"
+  },
+  "hero": {
+    "title": "Young Professional Visa Programm — Schweiz",
+    "description": "Wir begleiten qualifizierte Nicht-EU-Berufseinsteiger Schritt für Schritt durch das Bewerbungsverfahren für das YPV Schweiz — damit Sie den Prozess klar und souverän meistern.",
+    "cta": "Eignung kostenlos prüfen",
+    "disclaimer": "Kostenlose Vorprüfung · Dauert 3 Minuten · Keine Verpflichtung",
+    "subtitle": "Vorprüfungsformular"
+  },
+  "problem": {
+    "title": "Das Schweizer YPV — Real, aber leicht falsch zu machen",
+    "body1": "Die meisten nicht-europäischen Bewerber stossen auf Schwierigkeiten durch unklare Anforderungen, unvollständige Unterlagen, fehlendes Wissen über Einstellungszeiträume und Missverständnisse zu Sprachanforderungen, die in Wahrheit gar nicht Teil des Visumsverfahrens sind. Schon ein kleiner Fehler kann zu erheblichen Verzögerungen oder einer Ablehnung führen.",
+    "body2": "Dieses Webinar basiert auf echter Erfahrung und führt Sie durch genau die Schritte, die zur Bewilligung führen — zugeschnitten auf Bewerber aus den teilnahmeberechtigten nicht-europäischen Ländern."
+  },
+  "what_is_ypv": {
+    "title": "Was ist das Young Professional Visa?",
+    "body": "Das Young Professional Visa (YPV) Schweiz ist ein staatlich unterstütztes Trainee-Austauschprogramm, das es jungen Berufstätigen aus ausgewählten nicht-europäischen Ländern ermöglicht, in der Schweiz relevante Berufserfahrung im Rahmen eines vereinfachten Arbeitsbewilligungsverfahrens zu sammeln. Es ist auf die berufliche Weiterentwicklung ausgerichtet und nicht auf eine allgemeine Beschäftigung — Bewerbende benötigen daher ein Stellenangebot, das ihrem Studienfeld entspricht. Im Unterschied zu regulären Arbeitsbewilligungen ist das Verfahren dank bilateraler Abkommen zwischen der Schweiz und bestimmten Ländern leichter zugänglich und nicht streng vom lokalen Arbeitsmarkt abhängig.",
+    "disclaimer": "Diese Informationen dienen ausschliesslich allgemeinen Bildungszwecken. Überprüfen Sie die aktuellen Anforderungen vor einer Bewerbung stets bei der Schweizer Botschaft oder dem Staatssekretariat für Migration (SEM)."
+  },
+  "countries": {
+    "title": "Teilnahmeberechtigte Länder",
+    "lead": "Das Young Professional Visa steht Bürgerinnen und Bürgern dieser 15 Länder dank bilateraler Abkommen mit der Schweiz offen:",
+    "note": "Besondere Altersgrenzen gelten für Australien (20–30), Neuseeland (18–30) und Russland (18–30). Für alle übrigen Länder: 18–35."
+  },
+  "host": {
+    "title": "Ihre Begleitung durch den Prozess",
+    "subtitle": "Erfahrungsbasierte Begleitung für das YPV-Bewerbungsverfahren in der Schweiz",
+    "bio": "Diese Begleitung beruht auf echten Erfahrungen mit jungen Berufstätigen aus nicht-europäischen Ländern, die das Verfahren für das Young Professional Visa Schweiz durchlaufen haben. Wir kennen die typischen Stolpersteine, die nötigen Unterlagen und worauf die Schweizer Behörden achten — damit Sie das nicht allein herausfinden müssen.",
+    "name_placeholder": "[ABOUT_HOST_NAME_TBD]",
+    "credential_placeholder": "[ABOUT_HOST_CREDENTIAL_TBD]",
+    "photo_alt": "Foto folgt"
+  },
+  "about": {
+    "title": "Was Sie im Webinar lernen",
+    "description": "Eine zweistündige Live-Sitzung, die alles abdeckt, was Sie für eine starke YPV-Bewerbung in der Schweiz brauchen — direkt von einer Inhaberin oder einem Inhaber des Young Professional Visa, die bzw. der erfolgreich eine Stelle in der Schweiz gesichert und Bewerbende aus nicht-europäischen Ländern durch den Prozess geführt hat.",
+    "points": {
+      "eligibility_title": "Eignung im Detail",
+      "eligibility_desc": "Verstehen Sie genau, welche Anforderungen für Ihr Land, Alter, Ihre Ausbildung und Ihr Fachgebiet gelten",
+      "documents_title": "Dokumenten-Checkliste",
+      "documents_desc": "Genau die Unterlagen, die die Schweizer Behörden erwarten — in der gewünschten Reihenfolge",
+      "timing_title": "Zeitpunkt & Einstellungszeiträume",
+      "timing_desc": "Wann Sie sich bewerben sollten, wann Unternehmen einstellen und wie Sie Ihre Bewerbung darauf abstimmen",
+      "mistakes_title": "Häufige Fehler vermeiden",
+      "mistakes_desc": "Reale Stolpersteine, die zu Verzögerungen oder Ablehnungen führen — und wie Sie sie umgehen"
+    }
+  },
+  "faq": {
+    "title": "Häufig gestellte Fragen",
+    "q1": "Was ist das Young Professional Visa?",
+    "a1": "Es handelt sich um ein staatlich unterstütztes Trainee-Austauschprogramm, das es jungen Berufstätigen aus ausgewählten Nicht-EU-Ländern ermöglicht, in der Schweiz bis zu 18 Monate Berufserfahrung in ihrem Studienfeld zu sammeln.",
+    "q2": "Welche Länder sind teilnahmeberechtigt?",
+    "a2": "Argentinien, Australien, Kanada, Chile, Indonesien, Japan, Monaco, Neuseeland, Philippinen, Russland, San Marino, Südafrika, Tunesien, Ukraine und USA. Für jedes Land gelten eigene Altersgrenzen.",
+    "q3": "Wie viel kostet das Webinar?",
+    "a3": "Das Webinar ist kostenpflichtig — der genaue Preis wird Ihnen nach der kostenlosen Eignungsprüfung angezeigt. Die Vorprüfung selbst ist kostenlos, dauert 3 Minuten und ist unverbindlich.",
+    "q4": "Was, wenn ich derzeit nicht teilnahmeberechtigt bin?",
+    "a4": "Wir teilen Ihnen den konkreten Grund freundlich mit. Viele Bewerbende werden später teilnahmeberechtigt, wenn sich ihre Umstände ändern. Die Vorprüfung ist kostenlos.",
+    "q5": "Ist das ein garantierter Visumsservice?",
+    "a5": "Nein. Dies ist ein erfahrungsbasiertes Bildungswebinar — keine Visumsdienstleistung. Die endgültige Entscheidung treffen die Schweizer Behörden. Wir helfen Ihnen, den Prozess zu verstehen und eine starke Bewerbung vorzubereiten."
+  },
+  "cta_section": {
+    "title": "Bereit herauszufinden, ob Sie geeignet sind?",
+    "body": "Die Vorprüfung ist kostenlos, dauert 3 Minuten und liefert Ihnen ein sofortiges Ergebnis.",
+    "cta": "Kostenlose Vorprüfung starten"
+  },
+  "form": {
+    "title": "Vorprüfungsformular",
+    "subtitle": "Füllen Sie alle Abschnitte aus, um Ihre Eignung zu prüfen",
+    "section1": "Kontaktinformationen",
+    "section2": "Eignungsprüfung",
+    "section3": "Hintergrundinformationen",
+    "next": "Weiter",
+    "back": "Zurück",
+    "submit": "Bewerbung absenden",
+    "submitting": "Wird gesendet...",
+    "checking": "Eignung wird geprüft...",
+    "required": "Dieses Feld ist erforderlich",
+    "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "invalidDate": "Bitte geben Sie ein gültiges Datum ein",
+    "progress": "Schritt {current} von {total}",
+    "selectPlaceholder": "Bitte auswählen"
+  },
+  "rejection": {
+    "title": "Leider erfüllen Sie die Voraussetzungen derzeit nicht",
+    "subtitle": "Vielen Dank für Ihr Interesse am Young Professional Visa Schweiz Programm.",
+    "country_not_eligible": "Leider steht das Young Professional Visa Schweiz nur Bürgerinnen und Bürgern von 15 bestimmten Ländern offen, mit denen die Schweiz bilaterale Abkommen geschlossen hat. Bürgerinnen und Bürger von {country} sind derzeit nicht für dieses Programm zugelassen.",
+    "age_out_of_range": "Das Young Professional Visa Schweiz hat für Inhaberinnen und Inhaber eines Reisepasses aus {country} eine Altersanforderung von {min}–{max} Jahren. Basierend auf Ihrem Geburtsdatum sind Sie derzeit {age} Jahre alt.",
+    "vocational_training_required": "Das Programm setzt voraus, dass Bewerbende eine Berufsausbildung oder ein Hochschulstudium abgeschlossen haben.",
+    "field_interest_required": "Das Programm setzt voraus, dass Bewerbende in ihrem Studienfeld arbeiten.",
+    "encouragement": "Migrationsprogramme entwickeln sich weiter. Wenn sich Ihre Situation ändert, ermutigen wir Sie zu einer erneuten Bewerbung in der Zukunft.",
+    "contact": "Wenn Sie der Meinung sind, dass diese Beurteilung nicht korrekt ist, kontaktieren Sie uns bitte.",
+    "back": "Zurück zur Startseite"
+  },
+  "success": {
+    "title": "Glückwunsch — Sie sind teilnahmeberechtigt!",
+    "subtitle": "Bitte beachten Sie die untenstehenden Zahlungsanweisungen, um Ihren Platz zu sichern.",
+    "greeting": "Liebe/r {name},",
+    "eligible_message": "Sie haben unsere erste Eignungsprüfung für das Young Professional Visa Schweiz Webinar bestanden.",
+    "payment_title": "Zahlungsanweisungen",
+    "payment_intro": "Um Ihren Platz zu sichern, überweisen Sie bitte die Webinargebühr auf das folgende Wise-Konto:",
+    "price_label": "Webinargebühr",
+    "date_label": "Webinardatum",
+    "reference_label": "Verwendungszweck",
+    "next_steps_title": "Wie geht es weiter?",
+    "next_steps": "Sobald Ihre Zahlung von unserem Team bestätigt wurde, erhalten Sie den Zoom-Link zur Teilnahme am Webinar. Bitte rechnen Sie für die Zahlungsbestätigung mit 1–2 Werktagen.",
+    "contact": "Bei Fragen antworten Sie auf die Bestätigungs-E-Mail oder kontaktieren Sie uns unter {email}.",
+    "check_email": "Eine Bestätigungs-E-Mail mit diesen Angaben wurde an {email} gesendet."
+  },
+  "legal": {
+    "privacy": "Datenschutzerklärung",
+    "terms": "Nutzungsbedingungen",
+    "cookie": "Cookie-Richtlinie",
+    "refund": "Rückerstattungsrichtlinie",
+    "disclaimer": "Haftungsausschluss",
+    "lastUpdated": "Zuletzt aktualisiert"
+  },
+  "footer": {
+    "rights": "Alle Rechte vorbehalten.",
+    "screening_note": "Die Ergebnisse der Vorprüfung sind nur Anhaltspunkte und stellen keine Visumsbewilligung dar.",
+    "brand": "Young Professional Visa Schweiz",
+    "disclaimer": "Dieses Webinar vermittelt allgemeine Informationen, die auf realen Erfahrungen beruhen. Es handelt sich nicht um Rechtsberatung. Überprüfen Sie die aktuellen Visumsanforderungen vor einer Bewerbung stets bei der Schweizer Botschaft oder dem Staatssekretariat für Migration (SEM). Eine bestandene Vorprüfung ist keine Garantie für eine Visumsbewilligung."
+  },
+  "health": {
+    "ok": "Dienst ist verfügbar"
+  },
+  "errors": {
+    "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+    "submission_failed": "Ihre Eingabe konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut.",
+    "network": "Es ist ein Netzwerkfehler aufgetreten. Bitte prüfen Sie Ihre Verbindung und versuchen Sie es erneut."
+  }
+}

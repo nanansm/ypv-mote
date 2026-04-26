@@ -22,7 +22,7 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
 
-  if (!routing.locales.includes(locale as "en" | "zh")) {
+  if (!routing.locales.includes(locale as "en" | "de")) {
     notFound();
   }
 

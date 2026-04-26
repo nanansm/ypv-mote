@@ -21,7 +21,7 @@ type Question = {
 };
 
 const TYPES = ["text", "email", "tel", "select", "radio", "date", "textarea", "checkbox"];
-const LOCALES = ["en", "zh"] as const;
+const LOCALES = ["en", "de"] as const;
 
 function emptyTranslations(): Translation[] {
   return LOCALES.map((l) => ({ locale: l, label: "", placeholder: "", helpText: "" }));
@@ -42,7 +42,7 @@ export function QuestionEditor({ id }: { id: string }) {
     translations: emptyTranslations(),
     options: [] as QuestionOption[],
   });
-  const [activeTab, setActiveTab] = useState<"en" | "zh">("en");
+  const [activeTab, setActiveTab] = useState<"en" | "de">("en");
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -209,7 +209,7 @@ export function QuestionEditor({ id }: { id: string }) {
           {LOCALES.map((l) => (
             <button key={l} onClick={() => setActiveTab(l)}
               className={`px-4 py-2.5 text-sm font-medium transition-colors ${activeTab === l ? "text-[#3c3489] border-b-2 border-[#3c3489]" : "text-[#5c5c5c] hover:text-[#1a1a1a]"}`}>
-              {l === "en" ? "English" : "中文"}
+              {l === "en" ? "English" : "Deutsch"}
             </button>
           ))}
         </div>
@@ -256,7 +256,7 @@ export function QuestionEditor({ id }: { id: string }) {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 {LOCALES.map((l) => (
-                  <input key={l} placeholder={l === "en" ? "Label (EN)" : "标签 (ZH)"}
+                  <input key={l} placeholder={l === "en" ? "Label (EN)" : "Label (DE)"}
                     value={opt.translations.find((t) => t.locale === l)?.label ?? ""}
                     onChange={(e) => setOptionLabel(idx, l, e.target.value)}
                     className="h-8 px-2 border border-[#e5e5e5] rounded text-xs focus:outline-none" />

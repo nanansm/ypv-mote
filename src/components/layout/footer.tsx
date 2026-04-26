@@ -41,7 +41,10 @@ export function Footer() {
             ))}
           </nav>
         </div>
-        <div className="mt-8 pt-6 border-t border-[#e5e5e5]">
+        <div className="mt-8 pt-6 border-t border-[#e5e5e5] space-y-4">
+          <p className="text-xs text-[#8a8a8a] leading-relaxed max-w-3xl">
+            {t("disclaimer")}
+          </p>
           <p className="text-xs text-[#5c5c5c]">
             © {new Date().getFullYear()} YPV Switzerland. {t("rights")}
           </p>

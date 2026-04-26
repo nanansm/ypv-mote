@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 type Translation = { locale: string; title: string; bodyMarkdown: string };
 type LegalPage = { id: number; slug: string; updatedAt: string | null; translations: Translation[] };
 
-const LOCALES = ["en", "zh"] as const;
+const LOCALES = ["en", "de"] as const;
 
 export function LegalPageEditor({
   slug,
@@ -21,10 +21,10 @@ export function LegalPageEditor({
 }) {
   const router = useRouter();
   const [page, setPage] = useState<LegalPage | null>(null);
-  const [activeLocale, setActiveLocale] = useState<"en" | "zh">("en");
+  const [activeLocale, setActiveLocale] = useState<"en" | "de">("en");
   const [drafts, setDrafts] = useState<Record<string, { title: string; body: string }>>({
     en: { title: "", body: "" },
-    zh: { title: "", body: "" },
+    de: { title: "", body: "" },
   });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -35,9 +35,9 @@ export function LegalPageEditor({
       .then((r) => r.json())
       .then((d: LegalPage) => {
         setPage(d);
-        const updated: typeof drafts = { en: { title: "", body: "" }, zh: { title: "", body: "" } };
+        const updated: typeof drafts = { en: { title: "", body: "" }, de: { title: "", body: "" } };
         for (const t of d.translations) {
-          if (t.locale === "en" || t.locale === "zh") {
+          if (t.locale === "en" || t.locale === "de") {
             updated[t.locale] = { title: t.title, body: t.bodyMarkdown };
           }
         }
@@ -74,7 +74,7 @@ export function LegalPageEditor({
         {LOCALES.map((l) => (
           <button key={l} onClick={() => setActiveLocale(l)}
             className={`px-4 py-2.5 text-sm font-medium transition-colors ${activeLocale === l ? "text-[#3c3489] border-b-2 border-[#3c3489]" : "text-[#5c5c5c] hover:text-[#1a1a1a]"}`}>
-            {l === "en" ? "English" : "中文"}
+            {l === "en" ? "English" : "Deutsch"}
           </button>
         ))}
       </div>

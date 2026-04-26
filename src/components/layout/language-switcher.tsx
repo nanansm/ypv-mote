@@ -9,7 +9,6 @@ export function LanguageSwitcher() {
   const pathname = usePathname();
 
   function switchLocale(next: string) {
-    // Replace current locale prefix with new one
     const segments = pathname.split("/");
     segments[1] = next;
     router.push(segments.join("/"));
@@ -30,15 +29,15 @@ export function LanguageSwitcher() {
       </button>
       <span className="text-[#e5e5e5]">|</span>
       <button
-        onClick={() => switchLocale("zh")}
+        onClick={() => switchLocale("de")}
         className={`px-2 py-1 rounded transition-colors ${
-          locale === "zh"
+          locale === "de"
             ? "text-[#3c3489] font-semibold"
             : "text-[#5c5c5c] hover:text-[#1a1a1a]"
         }`}
-        aria-label="切换到中文"
+        aria-label="Zu Deutsch wechseln"
       >
-        中文
+        DE
       </button>
     </div>
   );

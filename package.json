@@ -8,6 +8,7 @@
     "start": "next start -p 3004",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
+    "db:migrate-locale": "tsx src/db/migrate-locale.ts",
     "db:seed": "tsx src/db/seed.ts",
     "db:studio": "drizzle-kit studio",
     "lint": "next lint",
