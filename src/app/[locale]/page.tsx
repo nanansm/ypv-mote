@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { getLocale } from "next-intl/server";
@@ -157,8 +158,15 @@ function HostSection() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
         <div className="grid sm:grid-cols-[280px_1fr] gap-8 sm:gap-12 items-start">
           {/* TODO: Replace with actual host photo */}
-          <div className="w-full max-w-[280px] aspect-square bg-[#f0f0ee] border border-[#e5e5e5] rounded-md flex items-center justify-center">
-            <span className="text-xs text-[#8a8a8a]">{t("photo_alt")}</span>
+          <div className="w-full max-w-[280px] aspect-square overflow-hidden rounded-md border border-[#e5e5e5]">
+            <Image
+              src="/host-photo.webp"
+              alt={t("photo_alt")}
+              width={280}
+              height={280}
+              className="w-full h-full object-cover"
+              priority
+            />
           </div>
           <div className="max-w-xl">
             <p className="text-xs font-semibold text-[#3c3489] tracking-widest uppercase mb-2">
