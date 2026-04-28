@@ -6,6 +6,9 @@ const withNextIntl = createNextIntlPlugin("./src/lib/i18n/request.ts");
 const nextConfig: NextConfig = {
   output: "standalone",
   serverExternalPackages: ["better-sqlite3"],
+  outputFileTracingIncludes: {
+    "/*": ["./src/db/seed.ts", "./drizzle/migrations/**/*"],
+  },
 };
 
 export default withNextIntl(nextConfig);

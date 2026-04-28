@@ -11,10 +11,9 @@ import {
 } from "./schema";
 import { eq } from "drizzle-orm";
 
-const now = new Date().toISOString();
-
-async function seed() {
-  console.log("Seeding database...");
+export async function seedDatabase() {
+  const now = new Date().toISOString();
+  console.log("[seed] Seeding database...");
 
   // ─── Eligibility Config ────────────────────────────────────────────────────
   const existing = db
@@ -936,10 +935,19 @@ Please log in to the admin panel to review this submission.`,
     }
   }
 
-  console.log("Seed complete.");
+  console.log("[seed] Seed complete.");
 }
 
-seed().catch((err) => {
-  console.error("Seed failed:", err);
-  process.exit(1);
-});
+const invokedDirectly =
+  typeof process !== "undefined" &&
+  Array.isArray(process.argv) &&
+  /[\\/]seed\.(ts|js|mjs|cjs)$/.test(process.argv[1] ?? "");
+
+if (invokedDirectly) {
+  seedDatabase()
+    .then(() => process.exit(0))
+    .catch((err) => {
+      console.error("[seed] Seed failed:", err);
+      process.exit(1);
+    });
+}

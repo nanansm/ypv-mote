@@ -12,6 +12,16 @@ export async function register() {
     console.log("[startup] Migrations applied");
   } catch (err) {
     console.error("[startup] Migration failed:", err);
+    throw err;
+  }
+
+  try {
+    const { seedDatabase } = await import("./db/seed");
+    await seedDatabase();
+    console.log("[startup] Seed complete");
+  } catch (err) {
+    // Non-fatal: app should still boot so admin can investigate via logs.
+    console.error("[startup] Seed failed:", err);
   }
 
   await seedAdminUser();

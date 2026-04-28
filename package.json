@@ -10,6 +10,7 @@
     "db:migrate": "tsx src/db/migrate.ts",
     "db:migrate-locale": "tsx src/db/migrate-locale.ts",
     "db:seed": "tsx src/db/seed.ts",
+    "db:check": "node -e \"const db=require('better-sqlite3')((process.env.DATABASE_URL||'file:./dev.db').replace('file:',''));console.log({config:db.prepare('SELECT count(*) as c FROM eligibility_config').get(),questions:db.prepare('SELECT count(*) as c FROM form_questions').get(),legal:db.prepare('SELECT count(*) as c FROM legal_pages').get(),settings:db.prepare('SELECT count(*) as c FROM app_settings').get(),emails:db.prepare('SELECT count(*) as c FROM email_templates').get()});\"",
     "db:studio": "drizzle-kit studio",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
