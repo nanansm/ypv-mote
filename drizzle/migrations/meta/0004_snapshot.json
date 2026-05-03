@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "2abab6af-6cc9-473c-bea4-643fba65a2c1",
-  "prevId": "ee0fdba8-97ba-48f0-b1ea-e99817a5adfa",
+  "id": "c57b8ccb-0cd5-463e-a01b-700d85e9d5a8",
+  "prevId": "2abab6af-6cc9-473c-bea4-643fba65a2c1",
   "tables": {
     "admin_sessions": {
       "name": "admin_sessions",
@@ -1124,6 +1124,13 @@
           "type": "real",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "price_idr": {
+          "name": "price_idr",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "zoom_link": {

@@ -69,6 +69,10 @@ export async function seedDatabase() {
     { key: "wise.bank_name", value: "Wise" },
     { key: "wise.bank_address", value: "" },
     { key: "wise.reference_instruction", value: "Please include your full name in the transfer reference" },
+    { key: "bca.account_holder", value: "" },
+    { key: "bca.account_number", value: "" },
+    { key: "bca.bank_name", value: "BCA" },
+    { key: "bca.bank_branch", value: "" },
     { key: "smtp.host", value: "smtp.gmail.com" },
     { key: "smtp.port", value: "587" },
     { key: "smtp.user", value: "" },
@@ -848,6 +852,66 @@ Im gesetzlich höchstzulässigen Umfang lehnen wir jede Haftung ab, die aus dem 
 
   // ─── Email Templates ───────────────────────────────────────────────────────
   const templates = [
+    {
+      key: "session_booking_confirmation",
+      subject: "Your YPV Session — Booking Reference {booking_reference}",
+      bodyText: `Dear {name},
+
+Thank you for booking the Young Professional Visa Switzerland webinar.
+
+─────────────────────────────────────
+SESSION DETAILS
+─────────────────────────────────────
+Date: {session_date}
+Time: {session_time} ({session_duration} minutes)
+Price: USD {session_price}
+
+─────────────────────────────────────
+BOOKING REFERENCE
+─────────────────────────────────────
+{booking_reference}
+
+Please use this reference when transferring payment via Wise.
+
+─────────────────────────────────────
+PAYMENT INSTRUCTIONS (Wise)
+─────────────────────────────────────
+{wise_details_block}
+
+Reference (paste exactly): {booking_reference}
+
+⚠ Complete your payment within 24 hours, otherwise your seat will be released to other applicants.
+
+Once we verify your payment, we will send the Zoom link for your session by email.
+
+If you have any questions, reply to this email or contact us at {admin_email}.
+
+Warm regards,
+The YPV Switzerland Team`,
+    },
+    {
+      key: "session_zoom_link",
+      subject: "Your YPV Webinar Zoom Link — {session_date}",
+      bodyText: `Dear {name},
+
+Your payment has been confirmed. Below are the details to join the upcoming webinar.
+
+─────────────────────────────────────
+SESSION ACCESS
+─────────────────────────────────────
+Date: {session_date}
+Time: {session_time} ({session_duration} minutes)
+Booking reference: {booking_reference}
+
+Zoom link: {zoom_link}
+
+Please join 5–10 minutes before the start time. We recommend testing your microphone and camera in advance.
+
+If you have any questions, reply to this email or contact us at {admin_email}.
+
+Warm regards,
+The YPV Switzerland Team`,
+    },
     {
       key: "eligible_participant",
       subject: "You're eligible — payment details for the YPV Switzerland Webinar",

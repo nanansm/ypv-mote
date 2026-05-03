@@ -3,6 +3,11 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { AiAnalysisPanel } from "./ai-analysis-panel";
+import {
+  formatSessionDate,
+  paymentStatusBadgeClasses,
+} from "./sessions-format";
+import { PaymentMethodBadge } from "./payment-method-badge";
 
 type Submission = {
   id: string;
@@ -34,8 +39,28 @@ type Submission = {
 
 type QuestionMeta = { key: string; label: string };
 
-
-const PAYMENT_STEPS = ["pending", "paid", "confirmed", "attended"] as const;
+type BookingRecord = {
+  booking: {
+    id: string;
+    sessionId: string;
+    bookingReference: string;
+    paymentStatus: string;
+    expiresAt: string | null;
+    paidAt: string | null;
+    confirmedAt: string | null;
+    createdAt: string;
+  };
+  session: {
+    id: string;
+    date: string;
+    time: string;
+    priceUsd: number;
+    priceIdr: number | null;
+    durationMinutes: number;
+    status: string;
+  } | null;
+  payment_method: "bca" | "wise" | null;
+};
 
 export function SubmissionDetail({ id }: { id: string }) {
   const [sub, setSub] = useState<Submission | null>(null);
@@ -44,6 +69,9 @@ export function SubmissionDetail({ id }: { id: string }) {
   const [actionMsg, setActionMsg] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [questionMeta, setQuestionMeta] = useState<QuestionMeta[]>([]);
+  const [booking, setBooking] = useState<BookingRecord | null>(null);
+  const [bookingLoaded, setBookingLoaded] = useState(false);
+  const [bookingMsg, setBookingMsg] = useState("");
 
   useEffect(() => {
     fetch("/api/admin/questions")
@@ -64,7 +92,18 @@ export function SubmissionDetail({ id }: { id: string }) {
     setNotes(data.adminNotes ?? "");
   }, [id]);
 
-  useEffect(() => { void load(); }, [load]);
+  const loadBooking = useCallback(async () => {
+    const res = await fetch(`/api/admin/submissions/${id}/booking`);
+    if (!res.ok) {
+      setBookingLoaded(true);
+      return;
+    }
+    const data = (await res.json()) as { booking: BookingRecord | null };
+    setBooking(data.booking ?? null);
+    setBookingLoaded(true);
+  }, [id]);
+
+  useEffect(() => { void load(); void loadBooking(); }, [load, loadBooking]);
 
   async function saveNotes() {
     setSaving(true);
@@ -76,20 +115,21 @@ export function SubmissionDetail({ id }: { id: string }) {
     setSaving(false);
   }
 
-  async function advanceStatus(status: string) {
-    if (!confirm(`Mark as "${status}"?`)) return;
-    await fetch(`/api/admin/submissions/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ paymentStatus: status, paymentVerifiedAt: status === "paid" || status === "confirmed" ? new Date().toISOString() : undefined }),
-    });
-    if (status === "confirmed") {
-      // Send zoom link
-      const res = await fetch(`/api/admin/submissions/${id}/send-zoom`, { method: "POST" });
-      const data = await res.json() as { ok?: boolean; error?: string };
-      setActionMsg(data.ok ? "Zoom link sent!" : `Zoom email failed: ${data.error}`);
+  async function bookingAction(endpoint: "mark-paid" | "mark-confirmed" | "cancel") {
+    if (!booking?.booking) return;
+    if (endpoint === "cancel" && !confirm("Cancel this booking?")) return;
+    setBookingMsg("");
+    const res = await fetch(
+      `/api/admin/bookings/${booking.booking.id}/${endpoint}`,
+      { method: "PATCH" }
+    );
+    if (!res.ok) {
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      setBookingMsg(data.error ?? `Action failed (${res.status})`);
+      return;
     }
-    await load();
+    setBookingMsg(`Booking updated: ${endpoint.replace("-", " ")}`);
+    await loadBooking();
   }
 
   async function action(endpoint: string, label: string) {
@@ -110,8 +150,6 @@ export function SubmissionDetail({ id }: { id: string }) {
   }
 
   if (!sub) return <div className="text-sm text-[#5c5c5c]">Loading…</div>;
-
-  const currentStepIdx = PAYMENT_STEPS.indexOf(sub.paymentStatus as (typeof PAYMENT_STEPS)[number]);
 
   return (
     <div>
@@ -168,28 +206,101 @@ export function SubmissionDetail({ id }: { id: string }) {
             );
           })()}
 
-          {/* Status timeline */}
-          <Section title="Payment Status">
-            <div className="flex gap-2 items-center mb-4">
-              {PAYMENT_STEPS.map((step, i) => (
-                <div key={step} className="flex items-center gap-1">
-                  <button
-                    onClick={() => sub.eligibilityStatus === "passed" && advanceStatus(step)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                      i <= currentStepIdx
-                        ? "bg-[#3c3489] text-white"
-                        : "bg-[#f0f0f0] text-[#5c5c5c] hover:bg-[#e5e5e5]"
-                    }`}
-                  >
-                    {step}
-                  </button>
-                  {i < PAYMENT_STEPS.length - 1 && (
-                    <span className="text-[#e5e5e5]">→</span>
-                  )}
+          {/* Booking */}
+          <Section title="Booking">
+            {!bookingLoaded && (
+              <p className="text-sm text-[#5c5c5c]">Loading booking…</p>
+            )}
+            {bookingLoaded && !booking && (
+              <p className="text-sm text-[#5c5c5c]">
+                User has not booked a session yet.
+              </p>
+            )}
+            {bookingLoaded && booking && (
+              <div className="space-y-3">
+                {booking.session ? (
+                  <>
+                    <Field
+                      label="Session"
+                      value={`${formatSessionDate(booking.session.date)} · ${booking.session.time}`}
+                    />
+                    <Field
+                      label="Price"
+                      value={`$${booking.session.priceUsd.toFixed(2)}`}
+                    />
+                  </>
+                ) : (
+                  <Field label="Session" value="(deleted)" />
+                )}
+                <div className="flex justify-between text-sm py-1 border-b border-[#f0f0f0]">
+                  <span className="text-[#5c5c5c]">Reference</span>
+                  <span className="font-mono text-[#1a1a1a]">
+                    {booking.booking.bookingReference}
+                  </span>
                 </div>
-              ))}
-            </div>
-            {sub.paymentVerifiedAt && <Field label="Verified at" value={sub.paymentVerifiedAt.split("T")[0]} />}
+                <div className="flex justify-between text-sm py-1 border-b border-[#f0f0f0]">
+                  <span className="text-[#5c5c5c]">Status</span>
+                  <span
+                    className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${paymentStatusBadgeClasses(booking.booking.paymentStatus)}`}
+                  >
+                    {booking.booking.paymentStatus}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm py-1 border-b border-[#f0f0f0]">
+                  <span className="text-[#5c5c5c]">Payment method</span>
+                  <PaymentMethodBadge method={booking.payment_method} />
+                </div>
+                {booking.booking.paymentStatus === "pending" &&
+                  booking.booking.expiresAt && (
+                    <Field
+                      label="Expires"
+                      value={booking.booking.expiresAt.split("T")[0]}
+                    />
+                  )}
+                {booking.booking.paidAt && (
+                  <Field
+                    label="Paid at"
+                    value={booking.booking.paidAt.split("T")[0]}
+                  />
+                )}
+                {booking.booking.confirmedAt && (
+                  <Field
+                    label="Confirmed at"
+                    value={booking.booking.confirmedAt.split("T")[0]}
+                  />
+                )}
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {booking.booking.paymentStatus === "pending" && (
+                    <button
+                      onClick={() => bookingAction("mark-paid")}
+                      className="px-3 py-1.5 rounded-md text-xs border border-[#3c3489] text-[#3c3489] hover:bg-[#f0effe]"
+                    >
+                      Mark paid
+                    </button>
+                  )}
+                  {booking.booking.paymentStatus === "paid" && (
+                    <button
+                      onClick={() => bookingAction("mark-confirmed")}
+                      className="px-3 py-1.5 rounded-md text-xs border border-[#0f6e56] text-[#0f6e56] hover:bg-green-50"
+                    >
+                      Mark confirmed
+                    </button>
+                  )}
+                  {booking.booking.paymentStatus !== "cancelled" &&
+                    booking.booking.paymentStatus !== "expired" && (
+                      <button
+                        onClick={() => bookingAction("cancel")}
+                        className="px-3 py-1.5 rounded-md text-xs border border-[#a32d2d] text-[#a32d2d] hover:bg-red-50"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                </div>
+                {bookingMsg && (
+                  <p className="text-xs text-[#5c5c5c]">{bookingMsg}</p>
+                )}
+              </div>
+            )}
           </Section>
 
           {/* Admin notes */}

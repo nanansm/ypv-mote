@@ -169,7 +169,9 @@ export function ScreeningForm({
         return;
       }
 
-      router.push(`/${locale}/success?id=${result.submissionId}`);
+      router.push(
+        `/${locale}/sessions?submission_id=${result.submissionId}`
+      );
     } catch {
       setServerError(tErrors("network"));
     } finally {

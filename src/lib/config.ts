@@ -33,6 +33,15 @@ export async function getWiseConfig() {
   };
 }
 
+export async function getBcaConfig() {
+  return {
+    accountHolder: await getSetting("bca.account_holder"),
+    accountNumber: await getSetting("bca.account_number"),
+    bankName: (await getSetting("bca.bank_name")) || "BCA",
+    bankBranch: await getSetting("bca.bank_branch"),
+  };
+}
+
 export async function getWebinarConfig() {
   return {
     name: await getSetting("webinar.name"),

@@ -4,8 +4,7 @@ import { submissions, emailTemplates } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { sendEmail } from "@/lib/email/client";
 import { renderTemplate } from "@/lib/email/templates";
-import { wisePersonalProvider } from "@/lib/payment/wise-personal";
-import { getWebinarConfig, getAdminNotificationEmail } from "@/lib/config";
+import { getAdminNotificationEmail } from "@/lib/config";
 import { syncSubmissionToSheet } from "@/lib/sheets/sync";
 import { syncLogs } from "@/db/schema";
 
@@ -55,47 +54,8 @@ export async function POST(req: NextRequest) {
       .where(eq(submissions.id, body.partialSubmissionId))
       .run();
 
-    // Send participant email (best effort)
-    try {
-      const [wiseDetails, webinar] = await Promise.all([
-        wisePersonalProvider.getPaymentDetails(),
-        getWebinarConfig(),
-      ]);
-
-      const detailsBlock = wisePersonalProvider.formatDetailsBlock(wiseDetails);
-      const adminEmail = await getAdminNotificationEmail();
-
-      const template = db
-        .select()
-        .from(emailTemplates)
-        .where(eq(emailTemplates.key, "eligible_participant"))
-        .get();
-
-      if (template) {
-        const vars: Record<string, string> = {
-          name: submission.fullName ?? "",
-          webinar_name: webinar.name,
-          webinar_price: webinar.price,
-          webinar_date: webinar.date || "TBD",
-          wise_details_block: detailsBlock,
-          reference_instruction: wiseDetails.referenceInstruction,
-          admin_email: adminEmail,
-        };
-
-        const subject = renderTemplate(template.subject, vars);
-        const text = renderTemplate(template.bodyText, vars);
-
-        if (submission.email) {
-          await sendEmail({ to: submission.email, subject, text });
-          db.update(submissions)
-            .set({ emailSentAt: new Date().toISOString() })
-            .where(eq(submissions.id, body.partialSubmissionId))
-            .run();
-        }
-      }
-    } catch (emailErr) {
-      console.error("[api/submit] email send failed:", emailErr);
-    }
+    // Booking confirmation email is now sent on /api/sessions/book, not here.
+    // (The user picks a session next, which has the price + date + reference required for the email.)
 
     // Admin notification (fire and forget)
     void sendAdminNotification(body.partialSubmissionId).catch((e) =>

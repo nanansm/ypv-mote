@@ -1,17 +1,36 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 
 type Setting = { key: string; value: string; updatedAt: string | null };
 
-const GROUPS: { label: string; keys: string[] }[] = [
+const GROUPS: { label: string; keys: string[]; help?: string }[] = [
   {
     label: "SMTP / Email",
     keys: ["smtp.host", "smtp.port", "smtp.user", "smtp.pass", "smtp.from"],
   },
   {
-    label: "Webinar",
-    keys: ["webinar.date", "webinar.time", "webinar.zoom_link", "webinar.payment_link"],
+    label: "BCA Payment (IDR — Indonesian users)",
+    help: "BCA details appear on the success page when an Indonesian user books a session and the session has IDR pricing set.",
+    keys: [
+      "bca.account_holder",
+      "bca.account_number",
+      "bca.bank_name",
+      "bca.bank_branch",
+    ],
+  },
+  {
+    label: "Wise Payment (USD — international users)",
+    help: "Wise USD details are shown to all non-Indonesian users, and as a fallback when BCA is not configured or a session has no IDR price.",
+    keys: [
+      "wise.account_holder",
+      "wise.account_number",
+      "wise.swift_bic",
+      "wise.bank_name",
+      "wise.bank_address",
+      "wise.reference_instruction",
+    ],
   },
   {
     label: "Google Sheets",
@@ -72,9 +91,20 @@ export function SettingsForm() {
 
   return (
     <div className="max-w-2xl space-y-6">
+      <div className="bg-[#f0effe] border border-[#3c3489] rounded-lg p-4 text-sm text-[#3c3489]">
+        Webinar dates, prices, and Zoom links are now managed in the{" "}
+        <Link href="/admin/sessions" className="font-medium underline">
+          Sessions page →
+        </Link>
+      </div>
       {GROUPS.map((group) => (
         <div key={group.label} className="bg-white border border-[#e5e5e5] rounded-lg p-4 space-y-4">
-          <h2 className="text-sm font-semibold text-[#1a1a1a]">{group.label}</h2>
+          <div>
+            <h2 className="text-sm font-semibold text-[#1a1a1a]">{group.label}</h2>
+            {group.help && (
+              <p className="text-xs text-[#5c5c5c] mt-1">{group.help}</p>
+            )}
+          </div>
           {group.keys.map((key) => {
             const isSecret = SECRET_KEYS.has(key);
             const isTextarea = TEXTAREA_KEYS.has(key);
