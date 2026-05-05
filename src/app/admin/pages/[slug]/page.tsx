@@ -2,6 +2,7 @@ import { Sidebar } from "@/components/admin/sidebar";
 import { LegalPageEditor } from "@/components/admin/legal-page-editor";
 
 const PAGE_LABELS: Record<string, string> = {
+  "eligible-page": "Eligible Page",
   "success-page": "Success Page",
   "rejected-page": "Rejected Page",
 };

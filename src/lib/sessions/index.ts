@@ -195,5 +195,5 @@ export function listAvailableSessions(now: Date = new Date()) {
 }
 
 export function expiryWindowMs(): number {
-  return 24 * 60 * 60 * 1000;
+  return 1 * 60 * 60 * 1000;
 }

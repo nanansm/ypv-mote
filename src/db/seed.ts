@@ -420,7 +420,7 @@ export async function seedDatabase() {
   }
 
   // ─── Legal Pages ───────────────────────────────────────────────────────────
-  const legalSlugs = ["privacy", "terms", "cookie", "refund", "disclaimer", "success-page", "rejected-page"] as const;
+  const legalSlugs = ["privacy", "terms", "cookie", "refund", "disclaimer", "success-page", "rejected-page", "eligible-page"] as const;
   type LegalSlug = typeof legalSlugs[number];
 
   const legalContent: Record<
@@ -755,6 +755,76 @@ Migrationsprogramme entwickeln sich weiter. Wenn sich Ihre Situation ändert, er
 
 Wenn Sie der Meinung sind, dass diese Beurteilung nicht korrekt ist, kontaktieren Sie uns bitte.`,
     },
+    "eligible-page": {
+      enTitle: "Eligible Page",
+      deTitle: "Berechtigte Seite",
+      enBody: `## Congratulations, {name}!
+
+You are eligible to participate in the Young Professional Visa Switzerland program.
+
+This means you can already start applying for jobs in Switzerland on your own, as you meet the basic eligibility requirements for the program.
+
+You can begin applying directly to Swiss employers who are open to hiring international candidates under the Young Professional Visa. However, please note that securing a job offer is a required step before proceeding with the visa application.
+
+Make sure your CV and supporting documents are well-prepared and meet international standards, as the job market in Switzerland can be quite competitive.
+
+You can also check the official requirements and download the instructions [here](https://www.sem.admin.ch/sem/en/home/themen/arbeit/berufspraktikum.html).
+
+To help you better understand the process and improve your chances of success, we offer a guidance service where you can gain practical insights into the Young Professional Visa and working in Switzerland.
+
+If you prefer structured guidance, step-by-step support, and insider tips, you can book a paid webinar session below.
+
+---
+
+**Disclaimer**
+
+This webinar is intended to provide guidance and insights on the Young Professional Visa and working in Switzerland. It does not guarantee employment or visa approval and is not a job placement service.
+
+The content is based on personal experience. I am not a professional recruiter, but someone who wants to help others better understand the process of working abroad—especially in Switzerland.
+
+The fee is a form of appreciation for the time and knowledge shared during the session, not for selling job opportunities.
+
+By proceeding with the payment, you acknowledge and agree to these terms.
+
+---
+
+Further details, including available session dates and payment instructions, will be shown once you select your preferred session.
+
+We look forward to supporting you on your journey to working in Switzerland.`,
+      deBody: `## Herzlichen Glückwunsch, {name}!
+
+Sie erfüllen die Voraussetzungen für die Teilnahme am Young Professional Visa Schweiz Programm.
+
+Das bedeutet, Sie können sich bereits eigenständig auf Stellen in der Schweiz bewerben, da Sie die grundlegenden Anforderungen des Programms erfüllen.
+
+Sie können sich direkt bei Schweizer Arbeitgebern bewerben, die offen für internationale Kandidatinnen und Kandidaten im Rahmen des Young Professional Visa sind. Bitte beachten Sie jedoch, dass ein konkretes Stellenangebot eine zwingende Voraussetzung für den Visumsantrag ist.
+
+Stellen Sie sicher, dass Ihr Lebenslauf und Ihre Unterlagen sorgfältig vorbereitet sind und internationalen Standards entsprechen — der Schweizer Arbeitsmarkt kann sehr kompetitiv sein.
+
+Die offiziellen Anforderungen und die Anleitung können Sie auch [hier](https://www.sem.admin.ch/sem/en/home/themen/arbeit/berufspraktikum.html) einsehen und herunterladen.
+
+Damit Sie den Prozess besser verstehen und Ihre Erfolgschancen verbessern können, bieten wir eine Begleitung an, in der Sie praktische Einblicke in das Young Professional Visa und das Arbeiten in der Schweiz erhalten.
+
+Wenn Sie strukturierte Begleitung, schrittweise Unterstützung und Insider-Tipps bevorzugen, können Sie unten eine kostenpflichtige Webinar-Session buchen.
+
+---
+
+**Haftungsausschluss**
+
+Dieses Webinar dient der Orientierung und Information rund um das Young Professional Visa und das Arbeiten in der Schweiz. Es garantiert weder eine Anstellung noch eine Visumsbewilligung und ist keine Stellenvermittlung.
+
+Die Inhalte beruhen auf persönlichen Erfahrungen. Ich bin keine professionelle Recruiterin, sondern jemand, der anderen helfen möchte, den Prozess des Arbeitens im Ausland — insbesondere in der Schweiz — besser zu verstehen.
+
+Die Gebühr ist eine Anerkennung für die Zeit und das Wissen, die während der Session geteilt werden, und nicht der Verkauf von Stellenangeboten.
+
+Mit der Zahlung bestätigen Sie, dass Sie diese Bedingungen zur Kenntnis genommen haben und ihnen zustimmen.
+
+---
+
+Weitere Details, einschliesslich verfügbarer Sessiontermine und Zahlungsanweisungen, werden angezeigt, sobald Sie Ihre bevorzugte Session ausgewählt haben.
+
+Wir freuen uns darauf, Sie auf Ihrem Weg in die Schweizer Arbeitswelt zu begleiten.`,
+    },
     disclaimer: {
       enTitle: "Disclaimer",
       deTitle: "Haftungsausschluss",
@@ -880,7 +950,7 @@ PAYMENT INSTRUCTIONS (Wise)
 
 Reference (paste exactly): {booking_reference}
 
-⚠ Complete your payment within 24 hours, otherwise your seat will be released to other applicants.
+⚠ Complete your payment within 1 hour, otherwise your seat will be released to other applicants.
 
 Once we verify your payment, we will send the Zoom link for your session by email.
 

@@ -2,6 +2,7 @@ import { Sidebar } from "@/components/admin/sidebar";
 import Link from "next/link";
 
 const PAGE_ITEMS = [
+  { slug: "eligible-page", label: "Eligible Page", desc: "Shown to eligible applicants before they choose a webinar session." },
   { slug: "success-page", label: "Success Page", desc: "Shown to eligible applicants after submitting the form." },
   { slug: "rejected-page", label: "Rejected Page", desc: "Shown to applicants who don't meet eligibility criteria." },
 ];
