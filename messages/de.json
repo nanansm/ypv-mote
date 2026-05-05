@@ -132,6 +132,25 @@
     "not_found_body": "Dieser Buchungslink ist ungültig oder wurde entfernt. Falls Sie eine Buchung gestartet haben, wählen Sie bitte erneut eine Session aus.",
     "back_to_sessions": "Session wählen"
   },
+  "eligible": {
+    "congratulations": "Herzlichen Glückwunsch, {name}!",
+    "lead": "Sie erfüllen die Voraussetzungen für die Teilnahme am Young Professional Visa Schweiz Programm.",
+    "p1": "Das bedeutet, Sie können sich bereits eigenständig auf Stellen in der Schweiz bewerben, da Sie die grundlegenden Anforderungen des Programms erfüllen.",
+    "p2": "Sie können sich direkt bei Schweizer Arbeitgebern bewerben, die offen für internationale Kandidatinnen und Kandidaten im Rahmen des Young Professional Visa sind. Bitte beachten Sie jedoch, dass ein konkretes Stellenangebot eine zwingende Voraussetzung für den Visumsantrag ist.",
+    "p3": "Stellen Sie sicher, dass Ihr Lebenslauf und Ihre Unterlagen sorgfältig vorbereitet sind und internationalen Standards entsprechen — der Schweizer Arbeitsmarkt kann sehr kompetitiv sein.",
+    "p4": "Die offiziellen Anforderungen und die Anleitung können Sie auch <link>hier</link> einsehen und herunterladen.",
+    "p5": "Damit Sie den Prozess besser verstehen und Ihre Erfolgschancen verbessern können, bieten wir eine Begleitung an, in der Sie praktische Einblicke in das Young Professional Visa und das Arbeiten in der Schweiz erhalten.",
+    "p6": "Wenn Sie strukturierte Begleitung, schrittweise Unterstützung und Insider-Tipps bevorzugen, können Sie unten eine kostenpflichtige Webinar-Session buchen.",
+    "disclaimer_label": "Haftungsausschluss",
+    "disclaimer_p1": "Dieses Webinar dient der Orientierung und Information rund um das Young Professional Visa und das Arbeiten in der Schweiz. Es garantiert weder eine Anstellung noch eine Visumsbewilligung und ist keine Stellenvermittlung.",
+    "disclaimer_p2": "Die Inhalte beruhen auf persönlichen Erfahrungen. Ich bin keine professionelle Recruiterin, sondern jemand, der anderen helfen möchte, den Prozess des Arbeitens im Ausland — insbesondere in der Schweiz — besser zu verstehen.",
+    "disclaimer_p3": "Die Gebühr ist eine Anerkennung für die Zeit und das Wissen, die während der Session geteilt werden, und nicht der Verkauf von Stellenangeboten.",
+    "disclaimer_p4": "Mit der Zahlung bestätigen Sie, dass Sie diese Bedingungen zur Kenntnis genommen haben und ihnen zustimmen.",
+    "outro": "Weitere Details, einschliesslich verfügbarer Sessiontermine und Zahlungsanweisungen, werden angezeigt, sobald Sie Ihre bevorzugte Session ausgewählt haben.",
+    "closing": "Wir freuen uns darauf, Sie auf Ihrem Weg in die Schweizer Arbeitswelt zu begleiten.",
+    "disagree": "Nein danke, ich erkunde selbst",
+    "agree": "Ja, ich möchte an einem Webinar teilnehmen"
+  },
   "sessions": {
     "title": "Wählen Sie Ihre Webinar-Session",
     "subtitle": "Sie sind teilnahmeberechtigt. Wählen Sie nun ein passendes Datum. Die Plätze sind begrenzt.",

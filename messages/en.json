@@ -132,6 +132,25 @@
     "not_found_body": "This booking link is invalid or has been removed. If you started a booking, please choose a session again.",
     "back_to_sessions": "Pick a session"
   },
+  "eligible": {
+    "congratulations": "Congratulations, {name}!",
+    "lead": "You are eligible to participate in the Young Professional Visa Switzerland program.",
+    "p1": "This means you can already start applying for jobs in Switzerland on your own, as you meet the basic eligibility requirements for the program.",
+    "p2": "You can begin applying directly to Swiss employers who are open to hiring international candidates under the Young Professional Visa. However, please note that securing a job offer is a required step before proceeding with the visa application.",
+    "p3": "Make sure your CV and supporting documents are well-prepared and meet international standards, as the job market in Switzerland can be quite competitive.",
+    "p4": "You can also check the official requirements and download the instructions <link>here</link>.",
+    "p5": "To help you better understand the process and improve your chances of success, we offer a guidance service where you can gain practical insights into the Young Professional Visa and working in Switzerland.",
+    "p6": "If you prefer structured guidance, step-by-step support, and insider tips, you can book a paid webinar session below.",
+    "disclaimer_label": "Disclaimer",
+    "disclaimer_p1": "This webinar is intended to provide guidance and insights on the Young Professional Visa and working in Switzerland. It does not guarantee employment or visa approval and is not a job placement service.",
+    "disclaimer_p2": "The content is based on personal experience. I am not a professional recruiter, but someone who wants to help others better understand the process of working abroad—especially in Switzerland.",
+    "disclaimer_p3": "The fee is a form of appreciation for the time and knowledge shared during the session, not for selling job opportunities.",
+    "disclaimer_p4": "By proceeding with the payment, you acknowledge and agree to these terms.",
+    "outro": "Further details, including available session dates and payment instructions, will be shown once you select your preferred session.",
+    "closing": "We look forward to supporting you on your journey to working in Switzerland.",
+    "disagree": "No thanks, I'll explore on my own",
+    "agree": "Yes, I'd like to join a webinar session"
+  },
   "sessions": {
     "title": "Choose your webinar session",
     "subtitle": "You're eligible. Now pick a date that works for you. Sessions have limited seats.",

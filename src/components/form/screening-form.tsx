@@ -170,7 +170,7 @@ export function ScreeningForm({
       }
 
       router.push(
-        `/${locale}/sessions?submission_id=${result.submissionId}`
+        `/${locale}/eligible?submission_id=${result.submissionId}`
       );
     } catch {
       setServerError(tErrors("network"));
