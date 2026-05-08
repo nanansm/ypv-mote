@@ -57,10 +57,10 @@ export async function POST(req: NextRequest) {
     // Booking confirmation email is now sent on /api/sessions/book, not here.
     // (The user picks a session next, which has the price + date + reference required for the email.)
 
-    // Admin notification (fire and forget)
+    /*
     void sendAdminNotification(body.partialSubmissionId).catch((e) =>
       console.error("[api/submit] admin notification failed:", e)
-    );
+    ); */
 
     // Google Sheets sync (fire and forget)
     void syncSubmissionToSheet(body.partialSubmissionId).catch((syncErr) => {
