@@ -5,11 +5,7 @@ import { db } from "@/db";
 import { sessionBookings, submissions, webinarSessions } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth/guards";
 import { expirePendingBookings } from "@/lib/sessions";
-import { getBcaConfig } from "@/lib/config";
-import {
-  isBcaSettingsConfigured,
-  quickPaymentMethod,
-} from "@/lib/sessions/payment-method";
+import { quickPaymentMethodLabel } from "@/lib/sessions/payment-method";
 
 export async function GET(req: NextRequest) {
   const auth = requireAdmin(req);
@@ -52,15 +48,10 @@ export async function GET(req: NextRequest) {
     .orderBy(desc(sessionBookings.createdAt))
     .all();
 
-  const bca = await getBcaConfig();
-  const bcaConfigured = isBcaSettingsConfigured(bca);
-
   const bookings = rows.map((r) => ({
     ...r,
     payment_method:
-      r.submission && r.session
-        ? quickPaymentMethod(r.submission, r.session, bcaConfigured)
-        : null,
+      r.submission && r.session ? quickPaymentMethodLabel(r.submission) : null,
   }));
 
   return NextResponse.json({ bookings });

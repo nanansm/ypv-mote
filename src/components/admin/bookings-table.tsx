@@ -6,7 +6,7 @@ import {
   formatSessionDate,
   paymentStatusBadgeClasses,
 } from "./sessions-format";
-import { PaymentMethodBadge } from "./payment-method-badge";
+import { PaymentMethodBadge, type PaymentMethodLabel } from "./payment-method-badge";
 
 type BookingRow = {
   booking: {
@@ -34,7 +34,7 @@ type BookingRow = {
     priceUsd: number;
     priceIdr: number | null;
   } | null;
-  payment_method: "bca" | "wise" | null;
+  payment_method: PaymentMethodLabel;
 };
 
 type Props = {

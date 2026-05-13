@@ -7,7 +7,7 @@ import {
   formatSessionDate,
   paymentStatusBadgeClasses,
 } from "./sessions-format";
-import { PaymentMethodBadge } from "./payment-method-badge";
+import { PaymentMethodBadge, type PaymentMethodLabel } from "./payment-method-badge";
 
 type Submission = {
   id: string;
@@ -59,7 +59,7 @@ type BookingRecord = {
     durationMinutes: number;
     status: string;
   } | null;
-  payment_method: "bca" | "wise" | null;
+  payment_method: PaymentMethodLabel;
 };
 
 export function SubmissionDetail({ id }: { id: string }) {

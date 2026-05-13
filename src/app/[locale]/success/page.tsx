@@ -10,6 +10,10 @@ import {
 import { getAdminNotificationEmail } from "@/lib/config";
 import { expirePendingBookings } from "@/lib/sessions";
 import { resolvePaymentMethod } from "@/lib/sessions/payment-method";
+import {
+  PaymentMethodTabs,
+  type PublicPaymentMethod,
+} from "@/components/success/payment-method-tabs";
 
 function formatLongDate(iso: string, locale: string): string {
   const [y, m, d] = iso.split("-").map(Number);
@@ -73,6 +77,42 @@ export default async function SuccessPage({
   const name = submission.fullName ?? "";
   const email = submission.email ?? "";
 
+  const isIndonesian = submission.country === "Indonesia";
+
+  const tabMethods: PublicPaymentMethod[] = payment
+    ? isIndonesian
+      ? [
+          {
+            id: payment.defaultMethod.id,
+            key: payment.defaultMethod.key,
+            displayName: payment.defaultMethod.displayName,
+            currencyLabel: payment.defaultMethod.currencyLabel,
+            preset: payment.defaultMethod.preset,
+            fields: payment.defaultMethod.fields,
+          },
+        ]
+      : [payment.defaultMethod, ...payment.alternativeMethods].map((m) => ({
+          id: m.id,
+          key: m.key,
+          displayName: m.displayName,
+          currencyLabel: m.currencyLabel,
+          preset: m.preset,
+          fields: m.fields,
+        }))
+    : [];
+
+  const fieldLabels: Record<string, string> = {
+    account_holder: t("field_account_holder"),
+    account_number: t("field_account_number"),
+    swift_bic: t("field_swift_bic"),
+    bank_name: t("field_bank_name"),
+    bank_address: t("field_bank_address"),
+    bank_branch: t("field_bank_branch"),
+    revtag: t("field_revtag"),
+    paypal_email: t("field_paypal_email"),
+    paypal_me_link: t("field_paypal_me_link"),
+  };
+
   return (
     <div className="bg-[#fafaf9] min-h-screen">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
@@ -128,10 +168,12 @@ export default async function SuccessPage({
                 label={t("duration_label")}
                 value={`${session.durationMinutes} ${locale === "de" ? "Minuten" : "minutes"}`}
               />
-              <Row
-                label={t("price_label")}
-                value={payment.amountFormatted}
-              />
+              {payment && (
+                <Row
+                  label={t("price_label")}
+                  value={payment.amountFormatted}
+                />
+              )}
             </div>
           </div>
 
@@ -148,90 +190,41 @@ export default async function SuccessPage({
             <p className="text-xs text-[#5c5c5c] mt-2">{t("reference_help")}</p>
           </div>
 
-          {/* Payment method block (BCA or Wise — auto-detected) */}
+          {/* Payment methods (Indonesia: single; others: tabs) */}
           <div>
-            <h2 className="text-base font-semibold text-[#1a1a1a] mb-1">
+            <h2 className="text-base font-semibold text-[#1a1a1a] mb-2">
               {t("payment_title")}
             </h2>
-            <p className="text-xs font-medium text-[#3c3489] mb-2">
-              {payment.method === "bca"
-                ? t("payment_method_bca")
-                : t("payment_method_wise")}
-            </p>
-            {payment.method === "wise" && payment.fallbackNote && (
+            {payment && payment.fallbackNote && (
               <p className="text-xs text-[#996e00] bg-amber-50 border border-amber-100 rounded px-3 py-2 mb-3">
-                {payment.fallbackNote === "idr_not_offered"
-                  ? t("fallback_idr_not_offered")
-                  : t("fallback_bca_not_configured")}
+                {payment.fallbackNote === "indonesia_default_missing"
+                  ? t("fallback_indonesia_default_missing")
+                  : t("fallback_no_active_methods")}
               </p>
             )}
-            <p className="text-sm text-[#5c5c5c] mb-3">{t("payment_intro")}</p>
-            <div className="bg-[#fafaf9] border border-[#e5e5e5] rounded-md p-4 space-y-2 text-sm">
-              <Row
-                label={t("amount_label")}
-                value={payment.amountFormatted}
-                emphasis
-              />
-              {payment.method === "bca" ? (
-                <>
-                  <Row
-                    label={t("bca_account_holder")}
-                    value={payment.account.holder}
-                    fallback="Not configured"
-                  />
-                  <Row
-                    label={t("bca_account_number")}
-                    value={payment.account.number}
-                    fallback="Not configured"
-                  />
-                  <Row
-                    label={t("bca_bank_name")}
-                    value={payment.account.bankName}
-                  />
-                  {payment.account.bankBranch && (
-                    <Row
-                      label={t("bca_bank_branch")}
-                      value={payment.account.bankBranch}
-                    />
-                  )}
-                </>
-              ) : (
-                <>
-                  <Row
-                    label={t("wise_account_holder")}
-                    value={payment.account.holder}
-                    fallback="Not configured"
-                  />
-                  <Row
-                    label={t("wise_account_number")}
-                    value={payment.account.number}
-                    fallback="Not configured"
-                  />
-                  <Row
-                    label={t("wise_swift_bic")}
-                    value={payment.account.swiftBic}
-                    fallback="Not configured"
-                  />
-                  <Row
-                    label={t("wise_bank_name")}
-                    value={payment.account.bankName || "Wise"}
-                  />
-                  <Row
-                    label={t("wise_bank_address")}
-                    value={payment.account.bankAddress}
-                    fallback="Not configured"
-                  />
-                </>
-              )}
-              <div className="pt-2 mt-2 border-t border-[#e5e5e5]">
-                <p className="text-xs text-[#5c5c5c] mb-1">
-                  {t("reference_label")}
+            {payment && tabMethods.length > 0 ? (
+              <>
+                <p className="text-sm text-[#5c5c5c] mb-3">
+                  {t("payment_intro")}
                 </p>
-                <p className="font-mono text-sm font-semibold text-[#1a1a1a] break-all">
-                  {booking.bookingReference}
-                </p>
-              </div>
-            </div>
+                <PaymentMethodTabs
+                  methods={tabMethods}
+                  bookingReference={booking.bookingReference}
+                  amountUsd={session.priceUsd}
+                  labels={{
+                    referenceLabel: t("reference_label"),
+                    amountLabel: t("amount_label"),
+                    notConfigured: t("not_configured"),
+                    payVia: (label) => t("pay_via", { method: label }),
+                    fieldLabels,
+                  }}
+                />
+              </>
+            ) : (
+              <p className="text-sm text-[#a32d2d] bg-red-50 border border-red-100 rounded px-3 py-2">
+                {t("no_payment_methods")}
+              </p>
+            )}
           </div>
 
           {/* Expiry warning */}
@@ -275,28 +268,15 @@ export default async function SuccessPage({
 function Row({
   label,
   value,
-  emphasis,
-  fallback,
 }: {
   label: string;
   value: string;
-  emphasis?: boolean;
-  fallback?: string;
 }) {
-  const display = value
-    ? value
-    : fallback ?? "";
   return (
     <div className="flex justify-between gap-4">
       <span className="text-[#5c5c5c] flex-shrink-0">{label}</span>
-      <span
-        className={`text-right break-words ${
-          emphasis
-            ? "text-[#1a1a1a] font-semibold"
-            : "text-[#1a1a1a] font-medium"
-        } ${!value ? "text-[#5c5c5c] italic font-normal" : ""}`}
-      >
-        {display}
+      <span className="text-right break-words text-[#1a1a1a] font-medium">
+        {value}
       </span>
     </div>
   );

@@ -1,36 +1,18 @@
-import { getBcaConfig, getWiseConfig } from "@/lib/config";
+import {
+  getActiveNonIndonesiaMethods,
+  getDefaultIndonesiaMethod,
+  type PaymentMethodRow,
+} from "@/lib/payment-methods";
+import { formatAmount } from "@/lib/payment-methods/presets";
 
-export type PaymentMethod = "bca" | "wise";
-
-export type ResolvedPayment =
-  | {
-      method: "bca";
-      currency: "IDR";
-      amount: number;
-      amountFormatted: string;
-      account: {
-        holder: string;
-        number: string;
-        bankName: string;
-        bankBranch: string;
-      };
-      fallbackNote: null;
-    }
-  | {
-      method: "wise";
-      currency: "USD";
-      amount: number;
-      amountFormatted: string;
-      account: {
-        holder: string;
-        number: string;
-        swiftBic: string;
-        bankName: string;
-        bankAddress: string;
-        referenceInstruction: string;
-      };
-      fallbackNote: "idr_not_offered" | "bca_not_configured" | null;
-    };
+export type ResolvedPayment = {
+  defaultMethod: PaymentMethodRow;
+  alternativeMethods: PaymentMethodRow[];
+  currency: string;
+  amount: number;
+  amountFormatted: string;
+  fallbackNote: "indonesia_default_missing" | "no_active_methods" | null;
+};
 
 type SessionLike = {
   priceUsd: number;
@@ -41,94 +23,103 @@ type SubmissionLike = {
   country: string | null;
 };
 
-function formatIdr(amount: number): string {
-  return `Rp ${amount.toLocaleString("id-ID")}`;
-}
-
-function formatUsd(amount: number): string {
-  return `$${amount.toFixed(2)} USD`;
-}
-
-function isBcaConfigured(bca: {
-  accountHolder: string;
-  accountNumber: string;
-}): boolean {
-  return Boolean(bca.accountHolder && bca.accountNumber);
+function amountFor(method: PaymentMethodRow, session: SessionLike): { amount: number; formatted: string } {
+  if (method.currencyLabel.toUpperCase() === "IDR" && session.priceIdr != null && session.priceIdr > 0) {
+    return { amount: session.priceIdr, formatted: formatAmount(session.priceIdr, "IDR") };
+  }
+  return {
+    amount: session.priceUsd,
+    formatted: formatAmount(session.priceUsd, method.currencyLabel),
+  };
 }
 
 export async function resolvePaymentMethod(
   submission: SubmissionLike,
   session: SessionLike
-): Promise<ResolvedPayment> {
+): Promise<ResolvedPayment | null> {
   const isIndonesian = submission.country === "Indonesia";
-  const hasIdrPrice = session.priceIdr != null && session.priceIdr > 0;
 
   if (isIndonesian) {
-    const bca = await getBcaConfig();
-    if (!hasIdrPrice) {
-      const wise = await getWiseConfig();
-      return buildWise(session, wise, "idr_not_offered");
+    const idMethod = getDefaultIndonesiaMethod();
+    if (idMethod) {
+      const { amount, formatted } = amountFor(idMethod, session);
+      return {
+        defaultMethod: idMethod,
+        alternativeMethods: [],
+        currency: idMethod.currencyLabel,
+        amount,
+        amountFormatted: formatted,
+        fallbackNote: null,
+      };
     }
-    if (!isBcaConfigured(bca)) {
-      const wise = await getWiseConfig();
-      return buildWise(session, wise, "bca_not_configured");
-    }
+    const others = getActiveNonIndonesiaMethods();
+    if (others.length === 0) return null;
+    const [first, ...rest] = others;
+    const { amount, formatted } = amountFor(first, session);
     return {
-      method: "bca",
-      currency: "IDR",
-      amount: session.priceIdr!,
-      amountFormatted: formatIdr(session.priceIdr!),
-      account: {
-        holder: bca.accountHolder,
-        number: bca.accountNumber,
-        bankName: bca.bankName,
-        bankBranch: bca.bankBranch,
-      },
-      fallbackNote: null,
+      defaultMethod: first,
+      alternativeMethods: rest,
+      currency: first.currencyLabel,
+      amount,
+      amountFormatted: formatted,
+      fallbackNote: "indonesia_default_missing",
     };
   }
 
-  const wise = await getWiseConfig();
-  return buildWise(session, wise, null);
-}
-
-function buildWise(
-  session: SessionLike,
-  wise: Awaited<ReturnType<typeof getWiseConfig>>,
-  fallbackNote: "idr_not_offered" | "bca_not_configured" | null
-): ResolvedPayment {
+  const others = getActiveNonIndonesiaMethods();
+  if (others.length === 0) {
+    const idMethod = getDefaultIndonesiaMethod();
+    if (idMethod) {
+      const { amount, formatted } = amountFor(idMethod, session);
+      return {
+        defaultMethod: idMethod,
+        alternativeMethods: [],
+        currency: idMethod.currencyLabel,
+        amount,
+        amountFormatted: formatted,
+        fallbackNote: "no_active_methods",
+      };
+    }
+    return null;
+  }
+  const [first, ...rest] = others;
+  const { amount, formatted } = amountFor(first, session);
   return {
-    method: "wise",
-    currency: "USD",
-    amount: session.priceUsd,
-    amountFormatted: formatUsd(session.priceUsd),
-    account: {
-      holder: wise.accountHolder,
-      number: wise.accountNumber,
-      swiftBic: wise.swiftBic,
-      bankName: wise.bankName,
-      bankAddress: wise.bankAddress,
-      referenceInstruction: wise.referenceInstruction,
-    },
-    fallbackNote,
+    defaultMethod: first,
+    alternativeMethods: rest,
+    currency: first.currencyLabel,
+    amount,
+    amountFormatted: formatted,
+    fallbackNote: null,
   };
 }
 
-/** Same eligibility logic as `resolvePaymentMethod` but synchronous — for callers that
- * already have BCA configuration on hand (eg. admin bookings list, computed once per request). */
-export function quickPaymentMethod(
-  submission: SubmissionLike,
-  session: SessionLike,
-  bcaConfigured: boolean
-): PaymentMethod {
+/** Lightweight badge resolution for admin lists — returns the default method
+ * label (display_name + currency) for a submission's country, or null. */
+export function quickPaymentMethodLabel(submission: SubmissionLike): {
+  displayName: string;
+  currency: string;
+  key: string;
+} | null {
   const isIndonesian = submission.country === "Indonesia";
-  const hasIdrPrice = session.priceIdr != null && session.priceIdr > 0;
-  return isIndonesian && hasIdrPrice && bcaConfigured ? "bca" : "wise";
-}
-
-export function isBcaSettingsConfigured(bca: {
-  accountHolder: string;
-  accountNumber: string;
-}): boolean {
-  return isBcaConfigured(bca);
+  if (isIndonesian) {
+    const idMethod = getDefaultIndonesiaMethod();
+    if (idMethod) {
+      return {
+        displayName: idMethod.displayName,
+        currency: idMethod.currencyLabel,
+        key: idMethod.key,
+      };
+    }
+  }
+  const others = getActiveNonIndonesiaMethods();
+  if (others.length > 0) {
+    const m = others[0];
+    return {
+      displayName: m.displayName,
+      currency: m.currencyLabel,
+      key: m.key,
+    };
+  }
+  return null;
 }

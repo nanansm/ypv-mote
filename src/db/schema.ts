@@ -123,6 +123,30 @@ export const appSettings = sqliteTable("app_settings", {
   updatedAt: text("updated_at").notNull(),
 });
 
+// ─── Payment Methods ─────────────────────────────────────────────────────────
+
+export const paymentMethods = sqliteTable(
+  "payment_methods",
+  {
+    id: text("id").primaryKey(),
+    key: text("key").notNull().unique(),
+    displayName: text("display_name").notNull(),
+    currencyLabel: text("currency_label").notNull(),
+    preset: text("preset").notNull(),
+    fields: text("fields").notNull().default("{}"),
+    isActive: integer("is_active").notNull().default(1),
+    isDefaultForIndonesia: integer("is_default_for_indonesia")
+      .notNull()
+      .default(0),
+    orderIndex: integer("order_index").notNull().default(0),
+    createdAt: text("created_at").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (t) => ({
+    orderIdx: index("payment_methods_order").on(t.orderIndex),
+  })
+);
+
 // ─── Email Templates ─────────────────────────────────────────────────────────
 
 export const emailTemplates = sqliteTable("email_templates", {
@@ -221,6 +245,32 @@ export const sessionBookings = sqliteTable(
     submissionIdx: index("session_bookings_submission_id").on(t.submissionId),
   })
 );
+
+// ─── Reviews ─────────────────────────────────────────────────────────────────
+
+export const reviews = sqliteTable(
+  "reviews",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    email: text("email").notNull().unique(),
+    rating: integer("rating").notNull(),
+    comment: text("comment").notNull(),
+    locale: text("locale").notNull().default("en"),
+    status: text("status").notNull().default("pending"),
+    createdAt: text("created_at").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (t) => ({
+    statusIdx: index("reviews_status").on(t.status),
+    createdIdx: index("reviews_created_at").on(t.createdAt),
+  })
+);
+
+export const reviewRateLimits = sqliteTable("review_rate_limits", {
+  ip: text("ip").primaryKey(),
+  lastSubmittedAt: text("last_submitted_at").notNull(),
+});
 
 // ─── AI Analyses (Phase 2) ───────────────────────────────────────────────────
 

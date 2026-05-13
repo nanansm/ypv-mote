@@ -14,38 +14,13 @@ import {
   resolvePaymentMethod,
   type ResolvedPayment,
 } from "./payment-method";
+import { renderTextBlock } from "@/lib/payment-methods/render";
 
 function formatPaymentBlockForEmail(payment: ResolvedPayment): string {
-  if (payment.method === "bca") {
-    const lines = [
-      `Method: Bank transfer to BCA (IDR)`,
-      `Amount: ${payment.amountFormatted}`,
-      `Account holder: ${payment.account.holder || "[Not configured]"}`,
-      `Account number: ${payment.account.number || "[Not configured]"}`,
-      `Bank: ${payment.account.bankName || "BCA"}`,
-    ];
-    if (payment.account.bankBranch) {
-      lines.push(`Branch: ${payment.account.bankBranch}`);
-    }
-    return lines.join("\n");
-  }
-  const lines = [
-    `Method: Wise transfer (USD)`,
-    `Amount: ${payment.amountFormatted}`,
-    `Account holder: ${payment.account.holder || "[Not configured]"}`,
-    `Account number: ${payment.account.number || "[Not configured]"}`,
-    `SWIFT/BIC: ${payment.account.swiftBic || "[Not configured]"}`,
-    `Bank name: ${payment.account.bankName || "Wise"}`,
-    `Bank address: ${payment.account.bankAddress || "[Not configured]"}`,
-  ];
-  if (payment.fallbackNote) {
-    lines.unshift(
-      payment.fallbackNote === "idr_not_offered"
-        ? `(IDR is not offered for this session; please use Wise USD.)`
-        : `(BCA is unavailable right now; please use Wise USD.)`
-    );
-  }
-  return lines.join("\n");
+  return renderTextBlock(payment.defaultMethod, {
+    amountFormatted: payment.amountFormatted,
+    locale: "en",
+  });
 }
 
 function formatSessionDateForEmail(iso: string): string {
@@ -108,21 +83,31 @@ export async function sendBookingConfirmation(bookingId: string): Promise<void> 
   const payment = await resolvePaymentMethod(submission, session);
   const adminEmail = await getAdminNotificationEmail();
 
+  if (!payment) {
+    console.warn(
+      `[email] sendBookingConfirmation: no payment methods configured for booking ${bookingId}`
+    );
+    return;
+  }
+
+  const detailsBlock = formatPaymentBlockForEmail(payment);
+  const paymentMethodLabel = `${payment.defaultMethod.displayName} (${payment.currency})`;
+  const sessionPrice =
+    payment.currency.toUpperCase() === "USD"
+      ? session.priceUsd.toFixed(2)
+      : payment.amountFormatted;
+
   const vars: Record<string, string> = {
     name: submission.fullName ?? "",
     booking_reference: booking.bookingReference,
     session_date: formatSessionDateForEmail(session.date),
     session_time: session.time,
     session_duration: String(session.durationMinutes),
-    session_price:
-      payment.method === "bca" ? payment.amountFormatted : session.priceUsd.toFixed(2),
-    payment_method:
-      payment.method === "bca"
-        ? "Bank transfer (BCA — IDR)"
-        : "Wise transfer (USD)",
+    session_price: sessionPrice,
+    payment_method: paymentMethodLabel,
     payment_amount: payment.amountFormatted,
-    wise_details_block: formatPaymentBlockForEmail(payment),
-    payment_details_block: formatPaymentBlockForEmail(payment),
+    wise_details_block: detailsBlock,
+    payment_details_block: detailsBlock,
     admin_email: adminEmail,
   };
 

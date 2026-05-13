@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { db } from "./index";
 import {
   eligibilityConfig,
@@ -8,6 +9,7 @@ import {
   legalPageTranslations,
   appSettings,
   emailTemplates,
+  paymentMethods,
 } from "./schema";
 import { eq } from "drizzle-orm";
 
@@ -97,6 +99,126 @@ export async function seedDatabase() {
       db.insert(appSettings).values({ ...s, updatedAt: now }).run();
     }
   }
+
+  // ─── Payment Methods ───────────────────────────────────────────────────────
+  // Idempotent migration: move BCA/Wise from app_settings + seed inactive presets.
+  const settingsByKey = (() => {
+    const map = new Map<string, string>();
+    for (const row of db.select().from(appSettings).all()) {
+      map.set(row.key, row.value);
+    }
+    return map;
+  })();
+
+  function readSetting(key: string): string {
+    return settingsByKey.get(key) ?? "";
+  }
+
+  function upsertPaymentMethod(input: {
+    key: string;
+    displayName: string;
+    currencyLabel: string;
+    preset: "wise" | "revolut" | "paypal" | "custom_bank";
+    fields: Record<string, string>;
+    isActive: number;
+    isDefaultForIndonesia: number;
+    orderIndex: number;
+  }) {
+    const existing = db
+      .select()
+      .from(paymentMethods)
+      .where(eq(paymentMethods.key, input.key))
+      .get();
+    if (existing) return;
+    db.insert(paymentMethods)
+      .values({
+        id: randomUUID(),
+        key: input.key,
+        displayName: input.displayName,
+        currencyLabel: input.currencyLabel,
+        preset: input.preset,
+        fields: JSON.stringify(input.fields),
+        isActive: input.isActive,
+        isDefaultForIndonesia: input.isDefaultForIndonesia,
+        orderIndex: input.orderIndex,
+        createdAt: now,
+        updatedAt: now,
+      })
+      .run();
+  }
+
+  // BCA (Indonesia default)
+  const bcaHolder = readSetting("bca.account_holder");
+  const bcaNumber = readSetting("bca.account_number");
+  const bcaHasData = Boolean(bcaHolder || bcaNumber);
+  upsertPaymentMethod({
+    key: "bca",
+    displayName: "BCA",
+    currencyLabel: "IDR",
+    preset: "custom_bank",
+    fields: {
+      account_holder: bcaHolder,
+      account_number: bcaNumber,
+      bank_name: readSetting("bca.bank_name") || "BCA",
+      bank_branch: readSetting("bca.bank_branch"),
+      swift_bic: "",
+    },
+    isActive: bcaHasData ? 1 : 1,
+    isDefaultForIndonesia: 1,
+    orderIndex: 0,
+  });
+
+  // Wise (international)
+  const wiseHolder = readSetting("wise.account_holder");
+  const wiseNumber = readSetting("wise.account_number");
+  upsertPaymentMethod({
+    key: "wise",
+    displayName: "Wise",
+    currencyLabel: "USD",
+    preset: "wise",
+    fields: {
+      account_holder: wiseHolder,
+      account_number: wiseNumber,
+      swift_bic: readSetting("wise.swift_bic"),
+      bank_name: readSetting("wise.bank_name") || "Wise",
+      bank_address: readSetting("wise.bank_address"),
+    },
+    isActive: 1,
+    isDefaultForIndonesia: 0,
+    orderIndex: 1,
+  });
+
+  // Revolut (inactive preset)
+  upsertPaymentMethod({
+    key: "revolut",
+    displayName: "Revolut",
+    currencyLabel: "EUR",
+    preset: "revolut",
+    fields: {
+      account_holder: "",
+      revtag: "",
+      account_number: "",
+      swift_bic: "",
+    },
+    isActive: 0,
+    isDefaultForIndonesia: 0,
+    orderIndex: 2,
+  });
+
+  // PayPal (inactive preset)
+  upsertPaymentMethod({
+    key: "paypal",
+    displayName: "PayPal",
+    currencyLabel: "USD",
+    preset: "paypal",
+    fields: {
+      paypal_email: "",
+      paypal_me_link: "",
+    },
+    isActive: 0,
+    isDefaultForIndonesia: 0,
+    orderIndex: 3,
+  });
 
   // ─── Form Questions ────────────────────────────────────────────────────────
   const questions = [

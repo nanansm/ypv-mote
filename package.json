@@ -14,7 +14,10 @@
     "db:studio": "drizzle-kit studio",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test src/lib/eligibility/engine.test.ts"
+    "test": "tsx --test src/lib/eligibility/engine.test.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -46,6 +49,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@tailwindcss/postcss": "^4",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
