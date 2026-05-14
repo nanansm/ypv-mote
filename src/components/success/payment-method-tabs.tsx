@@ -9,6 +9,7 @@ export type PublicPaymentMethod = {
   currencyLabel: string;
   preset: "wise" | "revolut" | "paypal" | "custom_bank";
   fields: Record<string, string>;
+  payViaLabel: string;
 };
 
 type FieldRenderSpec = {
@@ -25,7 +26,6 @@ type Props = {
     referenceLabel: string;
     amountLabel: string;
     notConfigured: string;
-    payVia: (name: string) => string;
     fieldLabels: Record<string, string>;
   };
 };
@@ -124,7 +124,7 @@ export function PaymentMethodTabs({
       )}
 
       <p className="text-xs font-medium text-[#3c3489] mb-2">
-        {labels.payVia(`${active.displayName} (${active.currencyLabel})`)}
+        {active.payViaLabel}
       </p>
 
       <div className="bg-[#fafaf9] border border-[#e5e5e5] rounded-md p-4 space-y-2 text-sm">

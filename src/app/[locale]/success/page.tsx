@@ -10,6 +10,7 @@ import {
 import { getAdminNotificationEmail } from "@/lib/config";
 import { expirePendingBookings } from "@/lib/sessions";
 import { resolvePaymentMethod } from "@/lib/sessions/payment-method";
+import type { PaymentMethodRow } from "@/lib/payment-methods";
 import {
   PaymentMethodTabs,
   type PublicPaymentMethod,
@@ -79,26 +80,20 @@ export default async function SuccessPage({
 
   const isIndonesian = submission.country === "Indonesia";
 
+  const toPublic = (m: PaymentMethodRow): PublicPaymentMethod => ({
+    id: m.id,
+    key: m.key,
+    displayName: m.displayName,
+    currencyLabel: m.currencyLabel,
+    preset: m.preset,
+    fields: m.fields,
+    payViaLabel: t("pay_via", { method: `${m.displayName} (${m.currencyLabel})` }),
+  });
+
   const tabMethods: PublicPaymentMethod[] = payment
     ? isIndonesian
-      ? [
-          {
-            id: payment.defaultMethod.id,
-            key: payment.defaultMethod.key,
-            displayName: payment.defaultMethod.displayName,
-            currencyLabel: payment.defaultMethod.currencyLabel,
-            preset: payment.defaultMethod.preset,
-            fields: payment.defaultMethod.fields,
-          },
-        ]
-      : [payment.defaultMethod, ...payment.alternativeMethods].map((m) => ({
-          id: m.id,
-          key: m.key,
-          displayName: m.displayName,
-          currencyLabel: m.currencyLabel,
-          preset: m.preset,
-          fields: m.fields,
-        }))
+      ? [toPublic(payment.defaultMethod)]
+      : [payment.defaultMethod, ...payment.alternativeMethods].map(toPublic)
     : [];
 
   const fieldLabels: Record<string, string> = {
@@ -215,7 +210,6 @@ export default async function SuccessPage({
                     referenceLabel: t("reference_label"),
                     amountLabel: t("amount_label"),
                     notConfigured: t("not_configured"),
-                    payVia: (label) => t("pay_via", { method: label }),
                     fieldLabels,
                   }}
                 />
