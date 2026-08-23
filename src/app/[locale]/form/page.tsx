@@ -1,8 +1,15 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import { getQuestionsForSection } from "@/lib/questions";
 import { ScreeningForm } from "@/components/form/screening-form";
 
-export default async function FormPage() {
+export default async function FormPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  // Layouts and pages render in parallel, so the layout's setRequestLocale
+  // does not reliably land first — each page pins its own locale.
+  setRequestLocale((await params).locale);
   const locale = await getLocale();
   const t = await getTranslations({ locale, namespace: "form" });
 

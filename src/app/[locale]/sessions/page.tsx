@@ -1,11 +1,16 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import { SessionsPicker } from "@/components/sessions/sessions-picker";
 
 export default async function SessionsPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{ submission_id?: string }>;
 }) {
+  // Layouts and pages render in parallel, so the layout's setRequestLocale
+  // does not reliably land first — each page pins its own locale.
+  setRequestLocale((await params).locale);
   const { submission_id } = await searchParams;
   const locale = await getLocale();
   const t = await getTranslations({ locale, namespace: "sessions" });

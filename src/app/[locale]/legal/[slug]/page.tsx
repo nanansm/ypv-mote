@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getLocale } from "next-intl/server";
+import { getLocale, setRequestLocale } from "next-intl/server";
 import { db } from "@/db";
 import { legalPages, legalPageTranslations } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -7,9 +7,12 @@ import { eq } from "drizzle-orm";
 export default async function LegalPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { locale: routeLocale, slug } = await params;
+  // Layouts and pages render in parallel, so the layout's setRequestLocale
+  // does not reliably land first — each page pins its own locale.
+  setRequestLocale(routeLocale);
   const locale = await getLocale();
 
   const page = await db.select().from(legalPages).where(eq(legalPages.slug, slug)).get();

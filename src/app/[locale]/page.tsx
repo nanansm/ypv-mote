@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { getLocale } from "next-intl/server";
+import { getLocale, setRequestLocale } from "next-intl/server";
 import { TestimonialsSection } from "@/components/landing/testimonials-section";
 
 const ELIGIBLE_COUNTRIES: { name: string; code: string; flag: string }[] = [
@@ -22,7 +22,14 @@ const ELIGIBLE_COUNTRIES: { name: string; code: string; flag: string }[] = [
   { name: "USA", code: "US", flag: "🇺🇸" },
 ];
 
-export default async function LandingPage() {
+export default async function LandingPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  // Layouts and pages render in parallel, so the layout's setRequestLocale
+  // does not reliably land first — each page pins its own locale.
+  setRequestLocale((await params).locale);
   const locale = await getLocale();
   return (
     <div>

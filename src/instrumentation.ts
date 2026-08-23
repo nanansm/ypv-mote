@@ -1,6 +1,15 @@
 export async function register() {
   if (process.env.NEXT_RUNTIME !== "nodejs") return;
 
+  // On Cloudflare the schema is applied to D1 with `wrangler d1 migrations
+  // apply`, and there is no filesystem to read the migration folder from.
+  // NEXT_RUNTIME is "nodejs" there too, so the check above is not enough.
+  const { isCloudflareRuntime } = await import("./db");
+  if (isCloudflareRuntime()) {
+    console.log("[startup] Cloudflare runtime — migrations are applied out of band");
+    return;
+  }
+
   const { migrate } = await import("drizzle-orm/libsql/migrator");
   const { db } = await import("./db/index");
   const path = await import("path");

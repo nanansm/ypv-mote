@@ -1,4 +1,4 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import Link from "next/link";
 import { ReviewForm } from "@/components/review/review-form";
 import { ReviewsList } from "@/components/review/reviews-list";
@@ -7,7 +7,14 @@ import { getReviewStats, listApprovedReviewsPaged } from "@/lib/reviews";
 
 const PER_PAGE = 20;
 
-export default async function ReviewPage() {
+export default async function ReviewPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  // Layouts and pages render in parallel, so the layout's setRequestLocale
+  // does not reliably land first — each page pins its own locale.
+  setRequestLocale((await params).locale);
   const locale = await getLocale();
   const t = await getTranslations({ locale, namespace: "review" });
   const tTestimonials = await getTranslations({ locale, namespace: "testimonials" });

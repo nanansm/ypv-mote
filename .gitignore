@@ -51,3 +51,8 @@ next-env.d.ts
 
 # knowledge graph lokal - jangan di-commit
 graphify-out/
+
+# Cloudflare Workers build output
+.open-next/
+.wrangler/
+cloudflare-env.d.ts

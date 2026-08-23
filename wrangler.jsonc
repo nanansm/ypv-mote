@@ -1,0 +1,40 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ypv-mote",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "account_id": "5a4728efc7ef4e9ef576ba275d74fee0",
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "ypv-mote"
+    },
+    {
+      // SMTP sidecar. Lives apart because worker-mailer imports
+      // cloudflare:sockets, which the OpenNext bundler cannot resolve.
+      "binding": "MAILER",
+      "service": "ypv-mailer"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ypv-mote",
+      "database_id": "e17f2320-df8e-4efb-b7ea-e5304adb8fab"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "RATE_LIMIT",
+      "id": "82e6019429b64668806335326e1a75cd"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

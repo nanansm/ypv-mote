@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "ypv-mailer",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "account_id": "5a4728efc7ef4e9ef576ba275d74fee0",
+  // No public URL: the only caller is the ypv-mote Worker over a service binding.
+  "workers_dev": false,
+  "observability": { "enabled": true }
+}

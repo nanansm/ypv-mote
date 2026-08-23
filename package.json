@@ -10,7 +10,7 @@
     "db:migrate": "tsx src/db/migrate.ts",
     "db:migrate-locale": "tsx src/db/migrate-locale.ts",
     "db:seed": "tsx src/db/seed.ts",
-    "db:check": "node -e \"const db=require('better-sqlite3')((process.env.DATABASE_URL||'file:./dev.db').replace('file:',''));console.log({config:db.prepare('SELECT count(*) as c FROM eligibility_config').get(),questions:db.prepare('SELECT count(*) as c FROM form_questions').get(),legal:db.prepare('SELECT count(*) as c FROM legal_pages').get(),settings:db.prepare('SELECT count(*) as c FROM app_settings').get(),emails:db.prepare('SELECT count(*) as c FROM email_templates').get()});\"",
+    "db:check": "node -e \"const {createClient}=require('@libsql/client');const c=createClient({url:process.env.DATABASE_URL||'file:./dev.db'});const q=t=>c.execute('SELECT count(*) as c FROM '+t).then(r=>[t,r.rows[0].c]);Promise.all(['eligibility_config','form_questions','legal_pages','app_settings','email_templates'].map(q)).then(r=>console.log(Object.fromEntries(r)))\"",
     "db:studio": "drizzle-kit studio",
     "lint": "next lint",
     "typecheck": "tsc --noEmit && node scripts/check-await.mjs",
@@ -18,19 +18,20 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:report": "playwright show-report",
-    "check:await": "node scripts/check-await.mjs"
+    "check:await": "node scripts/check-await.mjs",
+    "preview:cf": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy:cf": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv --include-runtime=false cloudflare-env.d.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@libsql/client": "^0.17.3",
     "@types/bcryptjs": "^3.0.0",
     "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^12.9.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
-    "googleapis": "^171.4.0",
     "lucide-react": "^1.11.0",
     "next": "16.2.12",
     "next-intl": "^4.9.1",
@@ -50,15 +51,18 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260823.1",
+    "@opennextjs/cloudflare": "^1.20.2",
     "@playwright/test": "^1.60.0",
     "@tailwindcss/postcss": "^4",
-    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
     "@types/nodemailer": "^8.0.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/uuid": "^11.0.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.125.0",
+    "worker-mailer": "^1.2.1"
   }
 }

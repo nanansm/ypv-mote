@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import { db } from "@/db";
 import { submissions, legalPages, legalPageTranslations } from "@/db/schema";
 
@@ -31,10 +31,15 @@ function renderEligibleMarkdown(md: string): string {
 }
 
 export default async function EligiblePage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{ submission_id?: string }>;
 }) {
+  // Layouts and pages render in parallel, so the layout's setRequestLocale
+  // does not reliably land first — each page pins its own locale.
+  setRequestLocale((await params).locale);
   const { submission_id } = await searchParams;
   const locale = await getLocale();
 

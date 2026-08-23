@@ -1,4 +1,4 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
@@ -30,10 +30,15 @@ function formatLongDate(iso: string, locale: string): string {
 }
 
 export default async function SuccessPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{ booking_id?: string; id?: string }>;
 }) {
+  // Layouts and pages render in parallel, so the layout's setRequestLocale
+  // does not reliably land first — each page pins its own locale.
+  setRequestLocale((await params).locale);
   const { booking_id } = await searchParams;
   const locale = await getLocale();
   const t = await getTranslations({ locale, namespace: "success" });

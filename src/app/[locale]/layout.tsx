@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -25,6 +25,10 @@ export default async function LocaleLayout({
   if (!routing.locales.includes(locale as "en" | "de")) {
     notFound();
   }
+
+  // Without a proxy/middleware, next-intl has no other way to learn the locale
+  // for this request — the segment is the only source of truth.
+  setRequestLocale(locale);
 
   const messages = await getMessages();
 
