@@ -5,6 +5,12 @@
   "compatibility_date": "2026-08-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "account_id": "5a4728efc7ef4e9ef576ba275d74fee0",
+  "routes": [
+    {
+      "pattern": "ypv.motekreatif.com",
+      "custom_domain": true
+    }
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"

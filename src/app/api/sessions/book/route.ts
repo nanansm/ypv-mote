@@ -12,6 +12,7 @@ import {
 import { sendBookingConfirmation } from "@/lib/sessions/email";
 import { wisePersonalProvider } from "@/lib/payment/wise-personal";
 import { syncSubmissionToSheet } from "@/lib/sheets/sync";
+import { runAfterResponse } from "@/lib/after-response";
 
 export async function POST(req: NextRequest) {
   try {
@@ -106,15 +107,19 @@ export async function POST(req: NextRequest) {
 
     // Send confirmation email (best-effort, fire and forget so booking still
     // succeeds if SMTP is down).
-    void sendBookingConfirmation(bookingId).catch((emailErr) => {
-      console.error("[api/sessions/book] confirmation email failed:", emailErr);
-    });
+    runAfterResponse(
+      sendBookingConfirmation(bookingId).catch((emailErr) => {
+        console.error("[api/sessions/book] confirmation email failed:", emailErr);
+      })
+    );
 
     // Re-sync the submission row to Google Sheets so session date + booking
     // reference end up in the spreadsheet.
-    void syncSubmissionToSheet(body.submission_id).catch((syncErr) => {
-      console.error("[api/sessions/book] sheets sync failed:", syncErr);
-    });
+    runAfterResponse(
+      syncSubmissionToSheet(body.submission_id).catch((syncErr) => {
+        console.error("[api/sessions/book] sheets sync failed:", syncErr);
+      })
+    );
 
     return NextResponse.json({
       booking_id: bookingId,

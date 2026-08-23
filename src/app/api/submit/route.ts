@@ -8,6 +8,7 @@ import { renderTemplate } from "@/lib/email/templates";
 import { getAdminNotificationEmail } from "@/lib/config";
 import { syncSubmissionToSheet } from "@/lib/sheets/sync";
 import { syncLogs } from "@/db/schema";
+import { runAfterResponse } from "@/lib/after-response";
 
 export async function POST(req: NextRequest) {
   try {
@@ -63,8 +64,10 @@ export async function POST(req: NextRequest) {
       console.error("[api/submit] admin notification failed:", e)
     ); */
 
-    // Google Sheets sync (fire and forget)
-    void syncSubmissionToSheet(body.partialSubmissionId).catch(async (syncErr) => {
+    // Google Sheets sync — handed to waitUntil so Workers keeps the isolate
+    // alive after the response; an unawaited promise is cancelled there.
+    runAfterResponse(
+      syncSubmissionToSheet(body.partialSubmissionId).catch(async (syncErr) => {
       console.error("[api/submit] sheets sync failed:", syncErr);
       await db.insert(syncLogs)
         .values({
@@ -75,7 +78,8 @@ export async function POST(req: NextRequest) {
           createdAt: new Date().toISOString(),
         })
         .run();
-    });
+      })
+    );
 
     return NextResponse.json({ submissionId: body.partialSubmissionId });
   } catch (err) {
