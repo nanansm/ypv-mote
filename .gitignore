@@ -48,3 +48,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# knowledge graph lokal - jangan di-commit
+graphify-out/
