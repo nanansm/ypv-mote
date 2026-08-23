@@ -41,4 +41,37 @@ test.describe("CV guide page", () => {
       page.getByRole("heading", { name: /Not Sure If Your CV Is Good Enough/i })
     ).toBeVisible();
   });
+
+  test("EN: promo band sits above the reviews section and links to the guide", async ({ page }) => {
+    await page.goto("/en");
+    const band = page.locator('section:has(a[href="/en/guide/cv-guide"])').first();
+    await expect(
+      band.getByRole("heading", { name: /Your CV is the first thing Swiss employers read/i })
+    ).toBeVisible();
+
+    // The band must render before the reviews heading, not after it.
+    const order = await page.evaluate(() => {
+      const cta = document.querySelector('main a[href="/en/guide/cv-guide"]');
+      const headings = Array.from(document.querySelectorAll("h2"));
+      const reviews = headings.find((h) => /What past participants say/i.test(h.textContent ?? ""));
+      if (!cta || !reviews) return null;
+      return cta.compareDocumentPosition(reviews) & Node.DOCUMENT_POSITION_FOLLOWING ? "before" : "after";
+    });
+    expect(order).toBe("before");
+
+    await band.getByRole("link", { name: /Open the CV guide/i }).click();
+    await expect(page).toHaveURL(/\/en\/guide\/cv-guide/);
+    await expect(
+      page.getByRole("heading", { name: /Not Sure If Your CV Is Good Enough/i })
+    ).toBeVisible();
+  });
+
+  test("DE: promo band renders in German and links to the guide", async ({ page }) => {
+    await page.goto("/de");
+    const link = page.locator('main a[href="/de/guide/cv-guide"]');
+    await expect(link).toBeVisible();
+    await expect(link).toHaveText(/Zum CV-Leitfaden/i);
+    await link.click();
+    await expect(page).toHaveURL(/\/de\/guide\/cv-guide/);
+  });
 });

@@ -39,6 +39,7 @@ export default async function LandingPage({
       <CountriesSection />
       <HostSection />
       <AboutSection />
+      <CvGuideSection locale={locale} />
       <TestimonialsSection locale={locale} />
       <FaqSection />
       <CtaSection locale={locale} />
@@ -241,6 +242,37 @@ function AboutSection() {
               </li>
             ))}
           </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CvGuideSection({ locale }: { locale: string }) {
+  const t = useTranslations("cv_promo");
+
+  return (
+    <section className="bg-[#3c3489]">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        <div className="max-w-2xl">
+          <p className="text-[10px] sm:text-xs font-semibold tracking-[0.14em] uppercase text-[#c4bff5] mb-3">
+            {t("kicker")}
+          </p>
+          <h2
+            style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}
+            className="text-2xl sm:text-3xl text-white leading-tight mb-4"
+          >
+            {t("title")}
+          </h2>
+          <p className="text-sm sm:text-base text-[#c4bff5] leading-relaxed mb-8 max-w-xl">
+            {t("body")}
+          </p>
+          <Link
+            href={`/${locale}/guide/cv-guide`}
+            className="inline-flex items-center justify-center h-12 px-8 rounded-md bg-white text-[#3c3489] text-sm font-semibold no-underline hover:bg-[#f0effe] transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#3c3489]"
+          >
+            {t("cta")}
+          </Link>
         </div>
       </div>
     </section>

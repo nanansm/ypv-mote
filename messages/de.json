@@ -48,6 +48,12 @@
       "mistakes_desc": "Reale Stolpersteine, die zu Verzögerungen oder Ablehnungen führen — und wie Sie sie umgehen"
     }
   },
+  "cv_promo": {
+    "kicker": "Vor Ihrer Bewerbung",
+    "title": "Ihr Lebenslauf ist das Erste, was Schweizer Arbeitgeber lesen",
+    "body": "Der Leitfaden behandelt die Europass-Vorlage, das Foto, die Länge, das Verfassen auf Deutsch und das, was Sie belegen können müssen.",
+    "cta": "Zum CV-Leitfaden"
+  },
   "faq": {
     "title": "Häufig gestellte Fragen",
     "q1": "Was ist das Young Professional Visa?",

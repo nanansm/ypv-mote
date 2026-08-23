@@ -48,6 +48,12 @@
       "mistakes_desc": "Real pitfalls that lead to delays or rejections, and how to sidestep them"
     }
   },
+  "cv_promo": {
+    "kicker": "Before you apply",
+    "title": "Your CV is the first thing Swiss employers read",
+    "body": "The guide covers the Europass template, photo, length, writing it in German, and what you must be able to prove.",
+    "cta": "Open the CV guide"
+  },
   "faq": {
     "title": "Frequently Asked Questions",
     "q1": "What is the Young Professional Visa?",
