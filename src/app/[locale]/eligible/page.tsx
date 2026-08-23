@@ -57,6 +57,7 @@ export default async function EligiblePage({
   }
 
   const t = await getTranslations({ locale, namespace: "eligible" });
+  const tCvGuide = await getTranslations({ locale, namespace: "cv_guide" });
   const name = submission.fullName?.trim() || "";
 
   const page = await db
@@ -158,6 +159,15 @@ export default async function EligiblePage({
               {t("agree")}
             </Link>
           </div>
+
+          <p className="mt-4 text-center">
+            <Link
+              href={`/${locale}/guide/cv-guide`}
+              className="text-xs text-[#5c5c5c] hover:text-[#3c3489] underline-offset-2 hover:underline transition-colors"
+            >
+              {tCvGuide("nav_label")}
+            </Link>
+          </p>
         </div>
       </div>
     </div>

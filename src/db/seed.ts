@@ -1042,6 +1042,98 @@ Im gesetzlich höchstzulässigen Umfang lehnen wir jede Haftung ab, die aus dem 
     }
   }
 
+  // ─── CV Guide (guide/[slug] renderer, not part of legal footer links) ─────
+  const cvGuideEnBody = `If you're still confused about how to create a CV for your Swiss job applications, you can use the [Europass CV template](https://europass.europa.eu/en/create-europass-cv) as a starting point.
+
+One of the advantages of Europass is that it allows you to provide more detailed information about your previous employers and educational background, making it easier for employers to understand your experience and qualifications.
+
+## A Few CV Tips
+
+### 📸 Use a professional photo
+
+If you choose to include a photo, make sure it looks professional and appropriate for a job application.
+
+### 📄 Keep it concise
+
+Try to keep your CV to one page if possible. However, if you have extensive and relevant work experience, it's completely fine to have a CV of up to two pages.
+
+### 🇩🇪 Consider writing your CV in German
+
+If you're applying for jobs in the German-speaking part of Switzerland, we recommend preparing your CV in German whenever possible. An English CV can still work, especially if the job advertisement is in English, but a German CV can make your application more relevant to local employers.
+
+Not confident in your German yet? You can use an AI assistant such as ChatGPT or Gemini to help translate your CV from English into German. Just make sure to review the translation and adjust any job titles or industry-specific terms so they accurately reflect your real experience.
+
+### 💼 Be honest and accurate
+
+Everything you include in your CV should be based on your real experience and qualifications. Make sure your work experience can be supported by an employment certificate or reference letter from your previous employer.
+
+This is especially important when applying for jobs abroad. Don't add responsibilities, positions, or experience that you cannot prove.
+
+**Remember:** Your CV should make it easy for the employer to understand who you are, what you have done, and why your experience is relevant to the position you're applying for.`;
+
+  const cvGuideDeBody = `Wenn Sie noch unsicher sind, wie Sie einen Lebenslauf für Ihre Bewerbungen in der Schweiz erstellen sollen, können Sie die [Europass-Lebenslaufvorlage](https://europass.europa.eu/en/create-europass-cv) als Ausgangspunkt verwenden.
+
+Einer der Vorteile von Europass besteht darin, dass Sie detailliertere Informationen zu Ihren früheren Arbeitgebern und Ihrem Bildungshintergrund angeben können, wodurch es für Arbeitgeber einfacher wird, Ihre Erfahrung und Qualifikationen zu verstehen.
+
+## Ein paar Tipps für Ihren Lebenslauf
+
+### 📸 Verwenden Sie ein professionelles Foto
+
+Wenn Sie sich für ein Foto entscheiden, achten Sie darauf, dass es professionell und für eine Bewerbung angemessen wirkt.
+
+### 📄 Halten Sie ihn kurz und prägnant
+
+Versuchen Sie, Ihren Lebenslauf nach Möglichkeit auf eine Seite zu beschränken. Wenn Sie jedoch über umfangreiche und relevante Berufserfahrung verfügen, ist es völlig in Ordnung, einen Lebenslauf mit bis zu zwei Seiten zu haben.
+
+### 🇩🇪 Erwägen Sie, Ihren Lebenslauf auf Deutsch zu verfassen
+
+Wenn Sie sich für Stellen in der Deutschschweiz bewerben, empfehlen wir Ihnen, Ihren Lebenslauf wenn möglich auf Deutsch vorzubereiten. Ein englischer Lebenslauf kann ebenfalls funktionieren, insbesondere wenn die Stellenanzeige auf Englisch verfasst ist, aber ein deutscher Lebenslauf kann Ihre Bewerbung für lokale Arbeitgeber relevanter machen.
+
+Sie sind sich bei Ihrem Deutsch noch nicht sicher? Sie können einen KI-Assistenten wie ChatGPT oder Gemini verwenden, um Ihren Lebenslauf vom Englischen ins Deutsche übersetzen zu lassen. Achten Sie darauf, die Übersetzung zu überprüfen und Berufsbezeichnungen oder branchenspezifische Begriffe anzupassen, damit sie Ihre tatsächliche Erfahrung genau widerspiegeln.
+
+### 💼 Seien Sie ehrlich und korrekt
+
+Alles, was Sie in Ihren Lebenslauf aufnehmen, sollte auf Ihrer tatsächlichen Erfahrung und Ihren Qualifikationen beruhen. Stellen Sie sicher, dass Ihre Berufserfahrung durch eine Arbeitsbescheinigung oder ein Referenzschreiben Ihres früheren Arbeitgebers belegt werden kann.
+
+Dies ist besonders wichtig, wenn Sie sich im Ausland bewerben. Fügen Sie keine Verantwortlichkeiten, Positionen oder Erfahrungen hinzu, die Sie nicht belegen können.
+
+**Denken Sie daran:** Ihr Lebenslauf sollte es dem Arbeitgeber leicht machen zu verstehen, wer Sie sind, was Sie getan haben und warum Ihre Erfahrung für die Stelle, auf die Sie sich bewerben, relevant ist.`;
+
+  let cvGuidePageId: number;
+  const existingCvGuidePage = await db
+    .select()
+    .from(legalPages)
+    .where(eq(legalPages.slug, "cv-guide"))
+    .get();
+
+  if (!existingCvGuidePage) {
+    const result = await db
+      .insert(legalPages)
+      .values({ slug: "cv-guide", updatedAt: now })
+      .returning({ id: legalPages.id })
+      .get();
+    cvGuidePageId = result.id;
+  } else {
+    cvGuidePageId = existingCvGuidePage.id;
+  }
+
+  for (const { locale, title, body } of [
+    { locale: "en", title: "Not Sure If Your CV Is Good Enough?", body: cvGuideEnBody },
+    { locale: "de", title: "Sind Sie sich nicht sicher, ob Ihr Lebenslauf gut genug ist?", body: cvGuideDeBody },
+  ]) {
+    const existingTrans = (await db
+      .select()
+      .from(legalPageTranslations)
+      .where(eq(legalPageTranslations.pageId, cvGuidePageId))
+      .all())
+      .find((r) => r.locale === locale);
+    if (!existingTrans) {
+      await db.insert(legalPageTranslations)
+        .values({ pageId: cvGuidePageId, locale, title, bodyMarkdown: body })
+        .run();
+    }
+  }
+
   // ─── Email Templates ───────────────────────────────────────────────────────
   const templates = [
     {

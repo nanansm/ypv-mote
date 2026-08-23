@@ -12,6 +12,10 @@ const RATE_LIMIT_WINDOW = 5 * 60 * 1000; // 5 minutes
 const RATE_LIMIT_MAX = 10;
 
 export function checkRateLimit(ip: string): boolean {
+  // Opt-in escape hatch for the e2e suite: one Playwright project would burn
+  // the whole 10-attempt budget and the next project's admin specs would all
+  // skip on a 429. Never set this outside tests.
+  if (process.env.DISABLE_LOGIN_RATE_LIMIT === "1") return true;
   const now = Date.now();
   const entry = loginAttempts.get(ip);
   if (!entry || now - entry.firstAttempt > RATE_LIMIT_WINDOW) {

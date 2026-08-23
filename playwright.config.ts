@@ -42,6 +42,6 @@ export default defineConfig({
         timeout: 120_000,
         stdout: "ignore",
         stderr: "pipe",
-        env: { DISABLE_REVIEW_RATE_LIMIT: "1" },
+        env: { DISABLE_REVIEW_RATE_LIMIT: "1", DISABLE_LOGIN_RATE_LIMIT: "1" },
       },
 });

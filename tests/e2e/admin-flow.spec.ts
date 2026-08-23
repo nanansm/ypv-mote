@@ -7,7 +7,9 @@ test.describe("Admin flows", () => {
     test.skip(!ok, "Admin credentials unavailable");
 
     await page.goto("/admin");
-    await expect(page.getByText(/dashboard/i).first()).toBeVisible();
+    // Assert on the page heading, not nav text: the sidebar exists twice in the
+    // DOM (desktop + mobile drawer) and both are hidden at mobile widths.
+    await expect(page.getByRole("heading", { name: /dashboard/i })).toBeVisible();
   });
 
   test("settings page tabs navigate via hash", async ({ page }) => {
@@ -107,13 +109,13 @@ test.describe("Admin flows", () => {
     const ok = await loginAsAdmin(page);
     test.skip(!ok, "Admin credentials unavailable");
     await page.goto("/admin/sessions");
-    await expect(page.getByText(/sessions/i).first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: /sessions/i })).toBeVisible();
   });
 
   test("bookings page renders for admin", async ({ page }) => {
     const ok = await loginAsAdmin(page);
     test.skip(!ok, "Admin credentials unavailable");
     await page.goto("/admin/bookings");
-    await expect(page.getByText(/bookings/i).first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: /bookings/i })).toBeVisible();
   });
 });

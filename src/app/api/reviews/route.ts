@@ -1,6 +1,31 @@
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
-import { createReview } from "@/lib/reviews";
+import {
+  createReview,
+  getReviewStats,
+  listApprovedReviewsPaged,
+  toPublicReview,
+} from "@/lib/reviews";
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const page = Number(searchParams.get("page")) || 1;
+  const perPage = Number(searchParams.get("perPage")) || 20;
+  const ratingParam = searchParams.get("rating");
+  const rating = ratingParam ? Number(ratingParam) : null;
+
+  const [paged, stats] = await Promise.all([
+    listApprovedReviewsPaged({ page, perPage, rating }),
+    getReviewStats(),
+  ]);
+
+  return NextResponse.json({
+    reviews: paged.reviews,
+    total: paged.total,
+    hasMore: paged.hasMore,
+    stats,
+  });
+}
 
 function getIp(req: NextRequest): string | null {
   const fwd = req.headers.get("x-forwarded-for");
@@ -44,5 +69,8 @@ export async function POST(req: NextRequest) {
       result.code === "duplicate" ? 409 : result.code === "rate_limit" ? 429 : 400;
     return NextResponse.json({ error: result.message, code: result.code }, { status });
   }
-  return NextResponse.json({ ok: true, review: result.review }, { status: 201 });
+  return NextResponse.json(
+    { ok: true, review: toPublicReview(result.review) },
+    { status: 201 }
+  );
 }

@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 export function Footer() {
   const t = useTranslations("footer");
   const tLegal = useTranslations("legal");
+  const tCvGuide = useTranslations("cv_guide");
   const locale = useLocale();
 
   const legalLinks = [
@@ -30,6 +31,12 @@ export function Footer() {
             <p className="text-xs text-[#5c5c5c] max-w-xs">{t("screening_note")}</p>
           </div>
           <nav className="flex flex-wrap gap-x-5 gap-y-2">
+            <Link
+              href={`/${locale}/guide/cv-guide`}
+              className="text-xs text-[#5c5c5c] hover:text-[#1a1a1a] transition-colors"
+            >
+              {tCvGuide("footer_label")}
+            </Link>
             {legalLinks.map((link) => (
               <Link
                 key={link.slug}

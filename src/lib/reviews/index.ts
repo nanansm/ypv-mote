@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { db } from "@/db";
 import { reviews, reviewRateLimits } from "@/db/schema";
-import { and, desc, eq, type SQL } from "drizzle-orm";
+import { and, count, desc, eq, type SQL } from "drizzle-orm";
 
 export type ReviewStatus = "pending" | "approved" | "hidden";
 
@@ -149,7 +149,16 @@ export async function createReview(input: ReviewInput, ip: string | null): Promi
   return { ok: true, review: toReview(inserted) };
 }
 
-export async function listApprovedReviews(limit = 6): Promise<Review[]> {
+/** What the public may see. The review form promises the email is never shown
+ * publicly, so it must not leave the server on any public path. */
+export type PublicReview = Omit<Review, "email" | "status">;
+
+export function toPublicReview(r: Review): PublicReview {
+  const { email: _email, status: _status, ...rest } = r;
+  return rest;
+}
+
+export async function listApprovedReviews(limit = 6): Promise<PublicReview[]> {
   const rows = await db
     .select()
     .from(reviews)
@@ -157,7 +166,80 @@ export async function listApprovedReviews(limit = 6): Promise<Review[]> {
     .orderBy(desc(reviews.createdAt))
     .limit(limit)
     .all();
-  return rows.map(toReview);
+  return rows.map((r) => toPublicReview(toReview(r)));
+}
+
+export type ReviewStats = {
+  total: number;
+  average: number;
+  distribution: Record<1 | 2 | 3 | 4 | 5, number>;
+};
+
+export async function getReviewStats(): Promise<ReviewStats> {
+  const rows = await db
+    .select({ rating: reviews.rating, count: count() })
+    .from(reviews)
+    .where(eq(reviews.status, "approved"))
+    .groupBy(reviews.rating)
+    .all();
+
+  const distribution: Record<1 | 2 | 3 | 4 | 5, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  let total = 0;
+  let weightedSum = 0;
+  for (const row of rows) {
+    const rating = Math.floor(row.rating);
+    if (rating >= 1 && rating <= 5) {
+      distribution[rating as 1 | 2 | 3 | 4 | 5] = row.count;
+      total += row.count;
+      weightedSum += rating * row.count;
+    }
+  }
+  const average = total > 0 ? Math.round((weightedSum / total) * 10) / 10 : 0;
+  return { total, average, distribution };
+}
+
+export type PagedReviews = {
+  reviews: PublicReview[];
+  total: number;
+  hasMore: boolean;
+};
+
+export async function listApprovedReviewsPaged(params: {
+  page?: number;
+  perPage?: number;
+  rating?: number | null;
+}): Promise<PagedReviews> {
+  const rawPage = Math.floor(Number(params.page));
+  const page = Number.isFinite(rawPage) && rawPage > 0 ? rawPage : 1;
+  const rawPerPage = Math.floor(Number(params.perPage));
+  const perPage =
+    Number.isFinite(rawPerPage) && rawPerPage > 0 ? Math.min(rawPerPage, 50) : 20;
+  const rawRating = Math.floor(Number(params.rating));
+  const rating =
+    Number.isFinite(rawRating) && rawRating >= 1 && rawRating <= 5 ? rawRating : null;
+
+  const conditions: SQL[] = [eq(reviews.status, "approved")];
+  if (rating) conditions.push(eq(reviews.rating, rating));
+  const where = and(...conditions);
+
+  const totalRow = await db.select({ value: count() }).from(reviews).where(where).get();
+  const total = totalRow?.value ?? 0;
+
+  const offset = (page - 1) * perPage;
+  const rows = await db
+    .select()
+    .from(reviews)
+    .where(where)
+    .orderBy(desc(reviews.createdAt))
+    .limit(perPage)
+    .offset(offset)
+    .all();
+
+  return {
+    reviews: rows.map((r) => toPublicReview(toReview(r))),
+    total,
+    hasMore: offset + rows.length < total,
+  };
 }
 
 export async function listReviews(filters: {

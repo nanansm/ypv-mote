@@ -199,11 +199,23 @@
     "error_duplicate": "You've already submitted a review. Thank you!",
     "error_validation": "Please complete all fields and choose a rating.",
     "error_rate_limit": "Please wait an hour before submitting another review.",
-    "chars_remaining": "{count} characters remaining"
+    "chars_remaining": "{count} characters remaining",
+    "list_title": "Reviews",
+    "form_heading": "Write a review",
+    "filter_all": "All ratings",
+    "filter_star": "{rating} stars",
+    "load_more": "Load more",
+    "empty": "No reviews yet. Be the first to write one.",
+    "empty_filtered": "No reviews with this rating yet."
   },
   "testimonials": {
     "title": "What past participants say",
-    "cta": "Share your experience"
+    "cta": "Share your experience",
+    "summary_average": "{average} out of 5",
+    "summary_count": "{count} reviews",
+    "see_all": "See all {count} reviews",
+    "read_more": "Read more",
+    "read_less": "Show less"
   },
   "footer": {
     "rights": "All rights reserved.",
@@ -218,5 +230,10 @@
     "generic": "Something went wrong. Please try again.",
     "submission_failed": "Your submission could not be processed. Please try again.",
     "network": "A network error occurred. Please check your connection and try again."
+  },
+  "cv_guide": {
+    "nav_label": "CV guide",
+    "back_home": "Back to homepage",
+    "footer_label": "CV guide"
   }
 }

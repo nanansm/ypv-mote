@@ -37,6 +37,7 @@ export default async function SuccessPage({
   const { booking_id } = await searchParams;
   const locale = await getLocale();
   const t = await getTranslations({ locale, namespace: "success" });
+  const tCvGuide = await getTranslations({ locale, namespace: "cv_guide" });
 
   await expirePendingBookings();
 
@@ -244,6 +245,15 @@ export default async function SuccessPage({
               {t("contact", { email: adminEmail })}
             </p>
           )}
+
+          <p className="text-xs text-[#5c5c5c]">
+            <Link
+              href={`/${locale}/guide/cv-guide`}
+              className="text-[#3c3489] underline-offset-2 hover:underline"
+            >
+              {tCvGuide("nav_label")}
+            </Link>
+          </p>
         </div>
 
         <div className="mt-6">

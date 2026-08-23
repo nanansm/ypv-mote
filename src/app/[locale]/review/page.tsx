@@ -1,10 +1,24 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { ReviewForm } from "@/components/review/review-form";
+import { ReviewsList } from "@/components/review/reviews-list";
+import { ReviewsSummary } from "@/components/review/review-visuals";
+import { getReviewStats, listApprovedReviewsPaged } from "@/lib/reviews";
+
+const PER_PAGE = 20;
 
 export default async function ReviewPage() {
   const locale = await getLocale();
   const t = await getTranslations({ locale, namespace: "review" });
+  const tTestimonials = await getTranslations({ locale, namespace: "testimonials" });
+
+  const [stats, paged] = await Promise.all([
+    getReviewStats(),
+    listApprovedReviewsPaged({ page: 1, perPage: PER_PAGE }),
+  ]);
+
+  const averageLabel = tTestimonials("summary_average", { average: stats.average });
+  const countLabel = tTestimonials("summary_count", { count: stats.total });
 
   return (
     <div className="bg-[#fafaf9] min-h-screen">
@@ -23,6 +37,45 @@ export default async function ReviewPage() {
           {t("title")}
         </h1>
         <p className="text-sm text-[#5c5c5c] mb-6 sm:mb-8">{t("subtitle")}</p>
+
+        {stats.total > 0 && (
+          <div className="mb-8 pb-8 border-b border-[#e5e5e5]">
+            <ReviewsSummary stats={stats} averageLabel={averageLabel} countLabel={countLabel} />
+          </div>
+        )}
+
+        <h2
+          style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}
+          className="text-xl sm:text-2xl text-[#1a1a1a] mb-4"
+        >
+          {t("list_title")}
+        </h2>
+
+        <div className="mb-10 sm:mb-12">
+          <ReviewsList
+            locale={locale}
+            initialReviews={paged.reviews}
+            initialTotal={paged.total}
+            initialHasMore={paged.hasMore}
+            perPage={PER_PAGE}
+            labels={{
+              filterAll: t("filter_all"),
+              filterStarTemplate: t("filter_star", { rating: "{rating}" }),
+              loadMore: t("load_more"),
+              empty: t("empty"),
+              emptyFiltered: t("empty_filtered"),
+              readMore: tTestimonials("read_more"),
+              readLess: tTestimonials("read_less"),
+            }}
+          />
+        </div>
+
+        <h2
+          style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}
+          className="text-xl sm:text-2xl text-[#1a1a1a] mb-4"
+        >
+          {t("form_heading")}
+        </h2>
 
         <ReviewForm
           locale={locale}

@@ -199,11 +199,23 @@
     "error_duplicate": "Sie haben bereits eine Bewertung abgegeben. Vielen Dank!",
     "error_validation": "Bitte füllen Sie alle Felder aus und wählen Sie eine Bewertung.",
     "error_rate_limit": "Bitte warten Sie eine Stunde, bevor Sie eine weitere Bewertung abgeben.",
-    "chars_remaining": "{count} Zeichen übrig"
+    "chars_remaining": "{count} Zeichen übrig",
+    "list_title": "Bewertungen",
+    "form_heading": "Bewertung schreiben",
+    "filter_all": "Alle Bewertungen",
+    "filter_star": "{rating} Sterne",
+    "load_more": "Mehr laden",
+    "empty": "Noch keine Bewertungen. Schreiben Sie die erste.",
+    "empty_filtered": "Noch keine Bewertungen mit dieser Sternzahl."
   },
   "testimonials": {
     "title": "Was bisherige Teilnehmer sagen",
-    "cta": "Teilen Sie Ihre Erfahrung"
+    "cta": "Teilen Sie Ihre Erfahrung",
+    "summary_average": "{average} von 5",
+    "summary_count": "{count} Bewertungen",
+    "see_all": "Alle {count} Bewertungen ansehen",
+    "read_more": "Mehr lesen",
+    "read_less": "Weniger anzeigen"
   },
   "footer": {
     "rights": "Alle Rechte vorbehalten.",
@@ -218,5 +230,10 @@
     "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
     "submission_failed": "Ihre Eingabe konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut.",
     "network": "Es ist ein Netzwerkfehler aufgetreten. Bitte prüfen Sie Ihre Verbindung und versuchen Sie es erneut."
+  },
+  "cv_guide": {
+    "nav_label": "Lebenslauf-Leitfaden",
+    "back_home": "Zurück zur Startseite",
+    "footer_label": "Lebenslauf-Leitfaden"
   }
 }
