@@ -14,11 +14,11 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const { id } = await params;
-  const row = db
+  const row = await db
     .select()
     .from(webinarSessions)
     .where(eq(webinarSessions.id, id))
@@ -26,7 +26,7 @@ export async function GET(
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   return NextResponse.json({
-    session: { ...row, paid_count: paidCountForSession(row.id) },
+    session: { ...row, paid_count: await paidCountForSession(row.id) },
   });
 }
 
@@ -34,11 +34,11 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const { id } = await params;
-  const existing = db
+  const existing = await db
     .select()
     .from(webinarSessions)
     .where(eq(webinarSessions.id, id))
@@ -69,7 +69,7 @@ export async function PATCH(
       );
     }
     if (body.date !== existing.date) {
-      const hasBookings = db
+      const hasBookings = await db
         .select({ c: sql<number>`count(*)` })
         .from(sessionBookings)
         .where(
@@ -128,9 +128,9 @@ export async function PATCH(
     update.status = body.status;
   }
 
-  db.update(webinarSessions).set(update).where(eq(webinarSessions.id, id)).run();
+  await db.update(webinarSessions).set(update).where(eq(webinarSessions.id, id)).run();
 
-  const updated = db
+  const updated = await db
     .select()
     .from(webinarSessions)
     .where(eq(webinarSessions.id, id))
@@ -138,7 +138,7 @@ export async function PATCH(
 
   return NextResponse.json({
     session: updated
-      ? { ...updated, paid_count: paidCountForSession(updated.id) }
+      ? { ...updated, paid_count: await paidCountForSession(updated.id) }
       : null,
   });
 }
@@ -147,18 +147,18 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const { id } = await params;
-  const existing = db
+  const existing = await db
     .select()
     .from(webinarSessions)
     .where(eq(webinarSessions.id, id))
     .get();
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const paid = paidCountForSession(id);
+  const paid = await paidCountForSession(id);
   if (paid > 0) {
     return NextResponse.json(
       { error: "Cannot delete session with paid bookings" },
@@ -166,7 +166,7 @@ export async function DELETE(
     );
   }
 
-  db.delete(webinarSessions).where(eq(webinarSessions.id, id)).run();
+  await db.delete(webinarSessions).where(eq(webinarSessions.id, id)).run();
 
   return NextResponse.json({ deleted: true });
 }

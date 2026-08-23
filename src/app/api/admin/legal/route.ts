@@ -5,12 +5,12 @@ import { legalPages, legalPageTranslations } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth/guards";
 
 export async function GET(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
-  const pages = db.select().from(legalPages).all();
-  const result = pages.map((p) => ({
+  const pages = await db.select().from(legalPages).all();
+  const result = await Promise.all(pages.map(async (p) => ({
     ...p,
-    translations: db.select().from(legalPageTranslations).all().filter((t) => t.pageId === p.id),
-  }));
+    translations: (await db.select().from(legalPageTranslations).all()).filter((t) => t.pageId === p.id),
+  })));
   return NextResponse.json(result);
 }

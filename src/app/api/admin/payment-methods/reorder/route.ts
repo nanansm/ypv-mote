@@ -4,7 +4,7 @@ import { requireAdmin } from "@/lib/auth/guards";
 import { reorderPaymentMethods, listPaymentMethods } from "@/lib/payment-methods";
 
 export async function POST(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const body = (await req.json()) as Array<{ id: unknown; orderIndex: unknown }>;
@@ -18,6 +18,6 @@ export async function POST(req: NextRequest) {
     )
     .map((i) => ({ id: i.id, orderIndex: i.orderIndex }));
 
-  reorderPaymentMethods(order);
-  return NextResponse.json({ methods: listPaymentMethods() });
+  await reorderPaymentMethods(order);
+  return NextResponse.json({ methods: await listPaymentMethods() });
 }

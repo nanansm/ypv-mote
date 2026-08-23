@@ -14,11 +14,11 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const { id } = await params;
-  const submission = db.select().from(submissions).where(eq(submissions.id, id)).get();
+  const submission = await db.select().from(submissions).where(eq(submissions.id, id)).get();
   if (!submission) return NextResponse.json({ error: "Not found" }, { status: 404 });
   if (!submission.email) return NextResponse.json({ error: "No email on file" }, { status: 400 });
 
@@ -29,7 +29,7 @@ export async function POST(
       getAdminNotificationEmail(),
     ]);
     const detailsBlock = wisePersonalProvider.formatDetailsBlock(wiseDetails);
-    const template = db.select().from(emailTemplates).where(eq(emailTemplates.key, "eligible_participant")).get();
+    const template = await db.select().from(emailTemplates).where(eq(emailTemplates.key, "eligible_participant")).get();
     if (!template) return NextResponse.json({ error: "Template not found" }, { status: 500 });
 
     const vars: Record<string, string> = {
@@ -48,10 +48,10 @@ export async function POST(
       text: renderTemplate(template.bodyText, vars),
     });
 
-    logEmail({ submissionId: id, templateKey: "eligible_participant", toEmail: submission.email, status: "sent" });
+    await logEmail({ submissionId: id, templateKey: "eligible_participant", toEmail: submission.email, status: "sent" });
     return NextResponse.json({ ok: true });
   } catch (err) {
-    logEmail({ submissionId: id, templateKey: "eligible_participant", toEmail: submission.email ?? "", status: "failed", errorMessage: String(err) });
+    await logEmail({ submissionId: id, templateKey: "eligible_participant", toEmail: submission.email ?? "", status: "failed", errorMessage: String(err) });
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 }

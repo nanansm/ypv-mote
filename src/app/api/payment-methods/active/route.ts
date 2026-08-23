@@ -7,7 +7,7 @@ import {
 
 export async function GET() {
   return NextResponse.json({
-    indonesiaDefault: getDefaultIndonesiaMethod(),
-    others: getActiveNonIndonesiaMethods(),
+    indonesiaDefault: await getDefaultIndonesiaMethod(),
+    others: await getActiveNonIndonesiaMethods(),
   });
 }

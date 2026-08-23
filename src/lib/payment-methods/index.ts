@@ -44,8 +44,8 @@ function toRow(raw: typeof paymentMethods.$inferSelect): PaymentMethodRow {
   };
 }
 
-export function listPaymentMethods(): PaymentMethodRow[] {
-  const rows = db
+export async function listPaymentMethods(): Promise<PaymentMethodRow[]> {
+  const rows = await db
     .select()
     .from(paymentMethods)
     .orderBy(asc(paymentMethods.orderIndex))
@@ -53,12 +53,12 @@ export function listPaymentMethods(): PaymentMethodRow[] {
   return rows.map(toRow);
 }
 
-export function listActivePaymentMethods(): PaymentMethodRow[] {
-  return listPaymentMethods().filter((m) => m.isActive);
+export async function listActivePaymentMethods(): Promise<PaymentMethodRow[]> {
+  return (await listPaymentMethods()).filter((m) => m.isActive);
 }
 
-export function getPaymentMethod(id: string): PaymentMethodRow | null {
-  const row = db
+export async function getPaymentMethod(id: string): Promise<PaymentMethodRow | null> {
+  const row = await db
     .select()
     .from(paymentMethods)
     .where(eq(paymentMethods.id, id))
@@ -66,8 +66,8 @@ export function getPaymentMethod(id: string): PaymentMethodRow | null {
   return row ? toRow(row) : null;
 }
 
-export function getPaymentMethodByKey(key: string): PaymentMethodRow | null {
-  const row = db
+export async function getPaymentMethodByKey(key: string): Promise<PaymentMethodRow | null> {
+  const row = await db
     .select()
     .from(paymentMethods)
     .where(eq(paymentMethods.key, key))
@@ -75,26 +75,26 @@ export function getPaymentMethodByKey(key: string): PaymentMethodRow | null {
   return row ? toRow(row) : null;
 }
 
-export function getDefaultIndonesiaMethod(): PaymentMethodRow | null {
-  const rows = listActivePaymentMethods().filter((m) => m.isDefaultForIndonesia);
+export async function getDefaultIndonesiaMethod(): Promise<PaymentMethodRow | null> {
+  const rows = (await listActivePaymentMethods()).filter((m) => m.isDefaultForIndonesia);
   return rows[0] ?? null;
 }
 
-export function getActiveNonIndonesiaMethods(): PaymentMethodRow[] {
-  return listActivePaymentMethods().filter((m) => !m.isDefaultForIndonesia);
+export async function getActiveNonIndonesiaMethods(): Promise<PaymentMethodRow[]> {
+  return (await listActivePaymentMethods()).filter((m) => !m.isDefaultForIndonesia);
 }
 
-function nextOrderIndex(): number {
-  const rows = listPaymentMethods();
+async function nextOrderIndex(): Promise<number> {
+  const rows = await listPaymentMethods();
   if (rows.length === 0) return 0;
   return Math.max(...rows.map((m) => m.orderIndex)) + 1;
 }
 
-function maybeUniqueKey(desired: string): string {
+async function maybeUniqueKey(desired: string): Promise<string> {
   const base = desired.toLowerCase().replace(/[^a-z0-9_]/g, "_") || "method";
   let candidate = base;
   let i = 2;
-  while (getPaymentMethodByKey(candidate)) {
+  while (await getPaymentMethodByKey(candidate)) {
     candidate = `${base}_${i++}`;
   }
   return candidate;
@@ -110,16 +110,16 @@ export type CreateInput = {
   key?: string;
 };
 
-export function createPaymentMethod(input: CreateInput): PaymentMethodRow {
+export async function createPaymentMethod(input: CreateInput): Promise<PaymentMethodRow> {
   const defaults = PRESET_DEFAULTS[input.preset];
   const displayName = (input.displayName ?? defaults.displayName).trim() || defaults.displayName;
   const currencyLabel = (input.currencyLabel ?? defaults.currencyLabel).trim() || defaults.currencyLabel;
-  const key = maybeUniqueKey(input.key ?? displayName);
+  const key = await maybeUniqueKey(input.key ?? displayName);
   const fields = sanitizeFields(input.preset, input.fields ?? emptyFieldsFor(input.preset));
   const now = new Date().toISOString();
   const id = randomUUID();
 
-  db.insert(paymentMethods)
+  await db.insert(paymentMethods)
     .values({
       id,
       key,
@@ -129,17 +129,17 @@ export function createPaymentMethod(input: CreateInput): PaymentMethodRow {
       fields: JSON.stringify(fields),
       isActive: input.isActive === false ? 0 : 1,
       isDefaultForIndonesia: input.isDefaultForIndonesia ? 1 : 0,
-      orderIndex: nextOrderIndex(),
+      orderIndex: await nextOrderIndex(),
       createdAt: now,
       updatedAt: now,
     })
     .run();
 
   if (input.isDefaultForIndonesia) {
-    clearOtherIndonesiaDefaults(id);
+    await clearOtherIndonesiaDefaults(id);
   }
 
-  const created = getPaymentMethod(id);
+  const created = await getPaymentMethod(id);
   if (!created) throw new Error("Failed to create payment method");
   return created;
 }
@@ -153,8 +153,8 @@ export type UpdateInput = {
   orderIndex?: number;
 };
 
-export function updatePaymentMethod(id: string, input: UpdateInput): PaymentMethodRow | null {
-  const existing = getPaymentMethod(id);
+export async function updatePaymentMethod(id: string, input: UpdateInput): Promise<PaymentMethodRow | null> {
+  const existing = await getPaymentMethod(id);
   if (!existing) return null;
   const now = new Date().toISOString();
 
@@ -179,18 +179,18 @@ export function updatePaymentMethod(id: string, input: UpdateInput): PaymentMeth
     patch.orderIndex = input.orderIndex;
   }
 
-  db.update(paymentMethods).set(patch).where(eq(paymentMethods.id, id)).run();
+  await db.update(paymentMethods).set(patch).where(eq(paymentMethods.id, id)).run();
 
   if (input.isDefaultForIndonesia === true) {
-    clearOtherIndonesiaDefaults(id);
+    await clearOtherIndonesiaDefaults(id);
   }
 
   return getPaymentMethod(id);
 }
 
-function clearOtherIndonesiaDefaults(keepId: string): void {
+async function clearOtherIndonesiaDefaults(keepId: string): Promise<void> {
   const now = new Date().toISOString();
-  db.update(paymentMethods)
+  await db.update(paymentMethods)
     .set({ isDefaultForIndonesia: 0, updatedAt: now })
     .where(
       and(
@@ -201,8 +201,8 @@ function clearOtherIndonesiaDefaults(keepId: string): void {
     .run();
 }
 
-export function deletePaymentMethod(id: string): { ok: boolean; error?: string } {
-  const existing = getPaymentMethod(id);
+export async function deletePaymentMethod(id: string): Promise<{ ok: boolean; error?: string }> {
+  const existing = await getPaymentMethod(id);
   if (!existing) return { ok: false, error: "Not found" };
   if (existing.isDefaultForIndonesia) {
     return {
@@ -210,14 +210,14 @@ export function deletePaymentMethod(id: string): { ok: boolean; error?: string }
       error: "Set another method as Indonesia default first.",
     };
   }
-  db.delete(paymentMethods).where(eq(paymentMethods.id, id)).run();
+  await db.delete(paymentMethods).where(eq(paymentMethods.id, id)).run();
   return { ok: true };
 }
 
-export function reorderPaymentMethods(order: { id: string; orderIndex: number }[]): void {
+export async function reorderPaymentMethods(order: { id: string; orderIndex: number }[]): Promise<void> {
   const now = new Date().toISOString();
   for (const item of order) {
-    db.update(paymentMethods)
+    await db.update(paymentMethods)
       .set({ orderIndex: item.orderIndex, updatedAt: now })
       .where(eq(paymentMethods.id, item.id))
       .run();

@@ -10,11 +10,11 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const { id } = await params;
-  const booking = db
+  const booking = await db
     .select()
     .from(sessionBookings)
     .where(eq(sessionBookings.id, id))
@@ -38,12 +38,12 @@ export async function PATCH(
   }
 
   const now = new Date().toISOString();
-  db.update(sessionBookings)
+  await db.update(sessionBookings)
     .set({ paymentStatus: "confirmed", confirmedAt: now, updatedAt: now })
     .where(eq(sessionBookings.id, id))
     .run();
 
-  const updated = db
+  const updated = await db
     .select()
     .from(sessionBookings)
     .where(eq(sessionBookings.id, id))

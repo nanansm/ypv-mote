@@ -7,7 +7,7 @@ function getEnv(key: string): string | undefined {
 }
 
 async function getSetting(key: string): Promise<string> {
-  const row = db.select().from(appSettings).where(eq(appSettings.key, key)).get();
+  const row = await db.select().from(appSettings).where(eq(appSettings.key, key)).get();
   return row?.value ?? "";
 }
 

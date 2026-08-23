@@ -28,44 +28,47 @@ export type Question = {
   options: QuestionOption[];
 };
 
-export function getQuestionsForSection(locale: string, section: number): Question[] {
-  const questions = db
+export async function getQuestionsForSection(locale: string, section: number): Promise<Question[]> {
+  const questions = (await db
     .select()
     .from(formQuestions)
     .where(eq(formQuestions.section, section))
-    .all()
+    .all())
     .sort((a, b) => a.order - b.order);
 
-  return questions.map((q) => {
-    const translation = db
+  const result: Question[] = [];
+  for (const q of questions) {
+    const translation = (await db
       .select()
       .from(questionTranslations)
       .where(eq(questionTranslations.questionId, q.id))
-      .all()
+      .all())
       .find((t) => t.locale === locale);
 
-    const opts = db
+    const optionRows = (await db
       .select()
       .from(questionOptions)
       .where(eq(questionOptions.questionId, q.id))
-      .all()
-      .sort((a, b) => a.order - b.order)
-      .map((opt) => {
-        const optTrans = db
-          .select()
-          .from(questionTranslations)
-          .where(eq(questionTranslations.optionId, opt.id))
-          .all()
-          .find((t) => t.locale === locale);
-        return {
-          id: opt.id,
-          value: opt.value,
-          order: opt.order,
-          label: optTrans?.label ?? opt.value,
-        };
-      });
+      .all())
+      .sort((a, b) => a.order - b.order);
 
-    return {
+    const opts = [];
+    for (const opt of optionRows) {
+      const optTrans = (await db
+        .select()
+        .from(questionTranslations)
+        .where(eq(questionTranslations.optionId, opt.id))
+        .all())
+        .find((t) => t.locale === locale);
+      opts.push({
+        id: opt.id,
+        value: opt.value,
+        order: opt.order,
+        label: optTrans?.label ?? opt.value,
+      });
+    }
+
+    result.push({
       id: q.id,
       key: q.key,
       type: q.type,
@@ -78,6 +81,7 @@ export function getQuestionsForSection(locale: string, section: number): Questio
       placeholder: translation?.placeholder ?? null,
       helpText: translation?.helpText ?? null,
       options: opts,
-    };
-  });
+    });
+  }
+  return result;
 }

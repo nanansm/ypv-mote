@@ -78,11 +78,11 @@ async function findExistingRow(
   }
 }
 
-function loadActiveBookingForSheet(submissionId: string): {
+async function loadActiveBookingForSheet(submissionId: string): Promise<{
   sessionDate: string;
   bookingReference: string;
-} | null {
-  const row = db
+} | null> {
+  const row = await db
     .select({
       booking: sessionBookings,
       session: webinarSessions,
@@ -104,7 +104,7 @@ function loadActiveBookingForSheet(submissionId: string): {
 }
 
 export async function syncSubmissionToSheet(submissionId: string): Promise<void> {
-  const row = db
+  const row = await db
     .select()
     .from(submissions)
     .where(eq(submissions.id, submissionId))
@@ -116,7 +116,7 @@ export async function syncSubmissionToSheet(submissionId: string): Promise<void>
 
   await ensureHeaderRow(sheets, sheetId, tabName);
 
-  const bookingInfo = loadActiveBookingForSheet(submissionId);
+  const bookingInfo = await loadActiveBookingForSheet(submissionId);
 
   const values = [
     row.id,
@@ -168,12 +168,12 @@ export async function syncSubmissionToSheet(submissionId: string): Promise<void>
   }
 
   const syncedAt = new Date().toISOString();
-  db.update(submissions)
+  await db.update(submissions)
     .set({ sheetSyncedAt: syncedAt, updatedAt: syncedAt })
     .where(eq(submissions.id, submissionId))
     .run();
 
-  db.insert(syncLogs)
+  await db.insert(syncLogs)
     .values({
       submissionId,
       service: "google_sheets",

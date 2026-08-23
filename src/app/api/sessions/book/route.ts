@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const submission = db
+    const submission = await db
       .select()
       .from(submissions)
       .where(eq(submissions.id, body.submission_id))
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const session = db
+    const session = await db
       .select()
       .from(webinarSessions)
       .where(eq(webinarSessions.id, body.session_id))
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const existing = activeBookingForSubmission(body.submission_id);
+    const existing = await activeBookingForSubmission(body.submission_id);
     if (existing) {
       return NextResponse.json(
         {
@@ -82,13 +82,13 @@ export async function POST(req: NextRequest) {
     const now = new Date();
     const nowIso = now.toISOString();
     const expiresAt = new Date(now.getTime() + expiryWindowMs()).toISOString();
-    const reference = generateBookingReference(
+    const reference = await generateBookingReference(
       submission.fullName ?? "",
       session.id
     );
     const bookingId = uuidv4();
 
-    db.insert(sessionBookings)
+    await db.insert(sessionBookings)
       .values({
         id: bookingId,
         submissionId: body.submission_id,

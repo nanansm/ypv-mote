@@ -42,7 +42,7 @@ export default async function EligiblePage({
     redirect(`/${locale}`);
   }
 
-  const submission = db
+  const submission = await db
     .select()
     .from(submissions)
     .where(eq(submissions.id, submission_id))
@@ -59,25 +59,23 @@ export default async function EligiblePage({
   const t = await getTranslations({ locale, namespace: "eligible" });
   const name = submission.fullName?.trim() || "";
 
-  const page = db
+  const page = await db
     .select()
     .from(legalPages)
     .where(eq(legalPages.slug, "eligible-page"))
     .get();
 
   const dbTranslation = page
-    ? (db
+    ? ((await db
         .select()
         .from(legalPageTranslations)
         .where(eq(legalPageTranslations.pageId, page.id))
-        .all()
-        .find((r) => r.locale === locale) ??
-      db
+        .all()).find((r) => r.locale === locale) ??
+      (await db
         .select()
         .from(legalPageTranslations)
         .where(eq(legalPageTranslations.pageId, page.id))
-        .all()
-        .find((r) => r.locale === "en"))
+        .all()).find((r) => r.locale === "en"))
     : null;
 
   return (

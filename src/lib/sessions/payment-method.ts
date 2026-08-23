@@ -40,7 +40,7 @@ export async function resolvePaymentMethod(
   const isIndonesian = submission.country === "Indonesia";
 
   if (isIndonesian) {
-    const idMethod = getDefaultIndonesiaMethod();
+    const idMethod = await getDefaultIndonesiaMethod();
     if (idMethod) {
       const { amount, formatted } = amountFor(idMethod, session);
       return {
@@ -52,7 +52,7 @@ export async function resolvePaymentMethod(
         fallbackNote: null,
       };
     }
-    const others = getActiveNonIndonesiaMethods();
+    const others = await getActiveNonIndonesiaMethods();
     if (others.length === 0) return null;
     const [first, ...rest] = others;
     const { amount, formatted } = amountFor(first, session);
@@ -66,9 +66,9 @@ export async function resolvePaymentMethod(
     };
   }
 
-  const others = getActiveNonIndonesiaMethods();
+  const others = await getActiveNonIndonesiaMethods();
   if (others.length === 0) {
-    const idMethod = getDefaultIndonesiaMethod();
+    const idMethod = await getDefaultIndonesiaMethod();
     if (idMethod) {
       const { amount, formatted } = amountFor(idMethod, session);
       return {
@@ -96,14 +96,14 @@ export async function resolvePaymentMethod(
 
 /** Lightweight badge resolution for admin lists — returns the default method
  * label (display_name + currency) for a submission's country, or null. */
-export function quickPaymentMethodLabel(submission: SubmissionLike): {
+export async function quickPaymentMethodLabel(submission: SubmissionLike): Promise<{
   displayName: string;
   currency: string;
   key: string;
-} | null {
+} | null> {
   const isIndonesian = submission.country === "Indonesia";
   if (isIndonesian) {
-    const idMethod = getDefaultIndonesiaMethod();
+    const idMethod = await getDefaultIndonesiaMethod();
     if (idMethod) {
       return {
         displayName: idMethod.displayName,
@@ -112,7 +112,7 @@ export function quickPaymentMethodLabel(submission: SubmissionLike): {
       };
     }
   }
-  const others = getActiveNonIndonesiaMethods();
+  const others = await getActiveNonIndonesiaMethods();
   if (others.length > 0) {
     const m = others[0];
     return {

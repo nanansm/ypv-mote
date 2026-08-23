@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email and password required" }, { status: 400 });
     }
 
-    const user = db.select().from(adminUsers).where(eq(adminUsers.email, body.email)).get();
+    const user = await db.select().from(adminUsers).where(eq(adminUsers.email, body.email)).get();
     if (!user || !user.passwordHash) {
       await bcrypt.compare("dummy", "$2b$12$dummy.hash.to.prevent.timing.attack.ok");
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });

@@ -6,7 +6,7 @@ import { eq, and, isNull, desc, sql } from "drizzle-orm";
 import { requireAdmin } from "@/lib/auth/guards";
 
 export async function GET(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const sp = req.nextUrl.searchParams;
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
 
   const where = conditions.length > 0 ? and(...conditions) : undefined;
 
-  const rows = db
+  const rows = await db
     .select()
     .from(submissions)
     .where(where)
@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
     .all();
 
   const total = (
-    db.select({ count: sql<number>`count(*)` }).from(submissions).where(where).get()
+    await db.select({ count: sql<number>`count(*)` }).from(submissions).where(where).get()
   )?.count ?? 0;
 
   return NextResponse.json({ rows, total, page, pages: Math.ceil(total / limit) });

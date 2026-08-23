@@ -4,7 +4,7 @@ import { sendEmail } from "@/lib/email/client";
 import { getAdminNotificationEmail } from "@/lib/config";
 
 export async function POST(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   try {

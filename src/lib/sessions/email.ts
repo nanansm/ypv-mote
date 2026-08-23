@@ -37,19 +37,19 @@ function formatSessionDateForEmail(iso: string): string {
 }
 
 async function loadBookingContext(bookingId: string) {
-  const booking = db
+  const booking = await db
     .select()
     .from(sessionBookings)
     .where(eq(sessionBookings.id, bookingId))
     .get();
   if (!booking) return null;
 
-  const session = db
+  const session = await db
     .select()
     .from(webinarSessions)
     .where(eq(webinarSessions.id, booking.sessionId))
     .get();
-  const submission = db
+  const submission = await db
     .select()
     .from(submissions)
     .where(eq(submissions.id, booking.submissionId))
@@ -70,7 +70,7 @@ export async function sendBookingConfirmation(bookingId: string): Promise<void> 
   const { booking, session, submission } = ctx;
   if (!submission.email) return;
 
-  const template = db
+  const template = await db
     .select()
     .from(emailTemplates)
     .where(eq(emailTemplates.key, "session_booking_confirmation"))
@@ -117,18 +117,18 @@ export async function sendBookingConfirmation(bookingId: string): Promise<void> 
       subject: renderTemplate(template.subject, vars),
       text: renderTemplate(template.bodyText, vars),
     });
-    db.update(submissions)
+    await db.update(submissions)
       .set({ emailSentAt: new Date().toISOString() })
       .where(eq(submissions.id, submission.id))
       .run();
-    logEmail({
+    await logEmail({
       submissionId: submission.id,
       templateKey: "session_booking_confirmation",
       toEmail: submission.email,
       status: "sent",
     });
   } catch (err) {
-    logEmail({
+    await logEmail({
       submissionId: submission.id,
       templateKey: "session_booking_confirmation",
       toEmail: submission.email,
@@ -148,7 +148,7 @@ export async function sendBookingZoomLink(bookingId: string): Promise<void> {
   const { booking, session, submission } = ctx;
   if (!submission.email) return;
 
-  const template = db
+  const template = await db
     .select()
     .from(emailTemplates)
     .where(eq(emailTemplates.key, "session_zoom_link"))
@@ -176,14 +176,14 @@ export async function sendBookingZoomLink(bookingId: string): Promise<void> {
       subject: renderTemplate(template.subject, vars),
       text: renderTemplate(template.bodyText, vars),
     });
-    logEmail({
+    await logEmail({
       submissionId: submission.id,
       templateKey: "session_zoom_link",
       toEmail: submission.email,
       status: "sent",
     });
   } catch (err) {
-    logEmail({
+    await logEmail({
       submissionId: submission.id,
       templateKey: "session_zoom_link",
       toEmail: submission.email,

@@ -6,14 +6,14 @@ import { eq } from "drizzle-orm";
 import { requireAdmin } from "@/lib/auth/guards";
 
 export async function GET(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
-  const row = db.select().from(eligibilityConfig).where(eq(eligibilityConfig.id, 1)).get();
+  const row = await db.select().from(eligibilityConfig).where(eq(eligibilityConfig.id, 1)).get();
   return NextResponse.json(row);
 }
 
 export async function PUT(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const body = (await req.json()) as {
@@ -26,7 +26,7 @@ export async function PUT(req: NextRequest) {
   };
 
   const now = new Date().toISOString();
-  db.update(eligibilityConfig).set({
+  await db.update(eligibilityConfig).set({
     validCountries: JSON.stringify(body.validCountries),
     defaultAgeMin: body.defaultAgeMin,
     defaultAgeMax: body.defaultAgeMax,

@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
       extraResponses?: Record<string, string>;
     };
 
-    const rawConfig = db
+    const rawConfig = await db
       .select()
       .from(eligibilityConfig)
       .where(eq(eligibilityConfig.id, 1))
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       ? JSON.stringify(body.extraResponses)
       : null;
 
-    db.insert(submissions)
+    await db.insert(submissions)
       .values({
         id,
         locale: body.locale,

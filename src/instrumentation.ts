@@ -1,14 +1,14 @@
 export async function register() {
   if (process.env.NEXT_RUNTIME !== "nodejs") return;
 
-  const { migrate } = await import("drizzle-orm/better-sqlite3/migrator");
+  const { migrate } = await import("drizzle-orm/libsql/migrator");
   const { db } = await import("./db/index");
   const path = await import("path");
 
   const migrationsFolder = path.join(process.cwd(), "drizzle/migrations");
 
   try {
-    migrate(db, { migrationsFolder });
+    await migrate(db, { migrationsFolder });
     console.log("[startup] Migrations applied");
   } catch (err) {
     console.error("[startup] Migration failed:", err);
@@ -39,13 +39,13 @@ async function seedAdminUser() {
   const bcrypt = await import("bcryptjs");
   const { v4: uuidv4 } = await import("uuid");
 
-  const existing = db.select().from(adminUsers).where(eq(adminUsers.email, adminEmail)).get();
+  const existing = await db.select().from(adminUsers).where(eq(adminUsers.email, adminEmail)).get();
   if (existing) return;
 
   const passwordHash = await bcrypt.hash(adminPassword, 12);
   const now = new Date().toISOString();
 
-  db.insert(adminUsers).values({
+  await db.insert(adminUsers).values({
     id: uuidv4(),
     email: adminEmail,
     name: "Admin",

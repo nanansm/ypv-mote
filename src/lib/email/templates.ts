@@ -12,7 +12,7 @@ export function renderTemplate(
 export async function getTemplate(
   key: string
 ): Promise<{ subject: string; bodyText: string } | null> {
-  const row = db
+  const row = await db
     .select()
     .from(emailTemplates)
     .where(eq(emailTemplates.key, key))

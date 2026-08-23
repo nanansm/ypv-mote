@@ -10,19 +10,19 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const { id } = await params;
-  const submission = db.select().from(submissions).where(eq(submissions.id, id)).get();
+  const submission = await db.select().from(submissions).where(eq(submissions.id, id)).get();
   if (!submission) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const apiKeySetting = db
+  const apiKeySetting = await db
     .select()
     .from(appSettings)
     .where(eq(appSettings.key, "groq.api_key"))
     .get();
-  const modelSetting = db
+  const modelSetting = await db
     .select()
     .from(appSettings)
     .where(eq(appSettings.key, "groq.model"))
@@ -39,7 +39,7 @@ export async function POST(
     const result = await analyzeSubmission({ apiKey, model, submission });
 
     const now = new Date().toISOString();
-    const inserted = db
+    const inserted = await db
       .insert(aiAnalyses)
       .values({
         submissionId: id,
@@ -64,15 +64,15 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const { id } = await params;
-  const analyses = db
+  const analyses = (await db
     .select()
     .from(aiAnalyses)
     .where(eq(aiAnalyses.submissionId, id))
-    .all()
+    .all())
     .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
 
   return NextResponse.json(analyses);

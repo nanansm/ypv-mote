@@ -10,11 +10,11 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const { id } = await params;
-  const booking = db
+  const booking = await db
     .select()
     .from(sessionBookings)
     .where(eq(sessionBookings.id, id))
@@ -34,7 +34,7 @@ export async function PATCH(
     );
   }
 
-  const session = db
+  const session = await db
     .select()
     .from(webinarSessions)
     .where(eq(webinarSessions.id, booking.sessionId))
@@ -43,7 +43,7 @@ export async function PATCH(
     return NextResponse.json({ error: "Session no longer exists" }, { status: 404 });
   }
 
-  const paid = paidCountForSession(booking.sessionId);
+  const paid = await paidCountForSession(booking.sessionId);
   if (paid >= session.capacity) {
     return NextResponse.json(
       { error: "Session is full — cannot mark as paid" },
@@ -52,12 +52,12 @@ export async function PATCH(
   }
 
   const now = new Date().toISOString();
-  db.update(sessionBookings)
+  await db.update(sessionBookings)
     .set({ paymentStatus: "paid", paidAt: now, updatedAt: now })
     .where(eq(sessionBookings.id, id))
     .run();
 
-  const updated = db
+  const updated = await db
     .select()
     .from(sessionBookings)
     .where(eq(sessionBookings.id, id))

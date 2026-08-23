@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { emailLogs, syncLogs } from "@/db/schema";
 
-export function logEmail({
+export async function logEmail({
   submissionId,
   templateKey,
   toEmail,
@@ -14,7 +14,7 @@ export function logEmail({
   status: "sent" | "failed";
   errorMessage?: string;
 }) {
-  db.insert(emailLogs)
+  await db.insert(emailLogs)
     .values({
       submissionId: submissionId ?? null,
       templateKey,
@@ -26,7 +26,7 @@ export function logEmail({
     .run();
 }
 
-export function logSync({
+export async function logSync({
   submissionId,
   service,
   action,
@@ -39,7 +39,7 @@ export function logSync({
   status: "success" | "failed";
   errorMessage?: string;
 }) {
-  db.insert(syncLogs)
+  await db.insert(syncLogs)
     .values({
       submissionId,
       service,

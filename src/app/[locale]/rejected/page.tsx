@@ -52,15 +52,15 @@ export default async function RejectedPage({
   }
 
   // Load DB page content
-  const page = db.select().from(legalPages).where(eq(legalPages.slug, "rejected-page")).get();
+  const page = await db.select().from(legalPages).where(eq(legalPages.slug, "rejected-page")).get();
   const dbTranslation = page
-    ? db.select().from(legalPageTranslations)
+    ? (await db.select().from(legalPageTranslations)
         .where(eq(legalPageTranslations.pageId, page.id))
-        .all()
+        .all())
         .find((t) => t.locale === locale) ??
-      db.select().from(legalPageTranslations)
+      (await db.select().from(legalPageTranslations)
         .where(eq(legalPageTranslations.pageId, page.id))
-        .all()
+        .all())
         .find((t) => t.locale === "en")
     : null;
 

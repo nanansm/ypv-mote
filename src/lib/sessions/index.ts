@@ -28,8 +28,8 @@ const MONTH_ABBR = [
   "DEC",
 ];
 
-export function paidCountForSession(sessionId: string): number {
-  const row = db
+export async function paidCountForSession(sessionId: string): Promise<number> {
+  const row = await db
     .select({ c: sql<number>`count(*)` })
     .from(sessionBookings)
     .where(
@@ -42,9 +42,9 @@ export function paidCountForSession(sessionId: string): number {
   return row?.c ?? 0;
 }
 
-export function expirePendingBookings(now: Date = new Date()): number {
+export async function expirePendingBookings(now: Date = new Date()): Promise<number> {
   const nowIso = now.toISOString();
-  const result = db
+  const result = await db
     .update(sessionBookings)
     .set({ paymentStatus: "expired", updatedAt: nowIso })
     .where(
@@ -54,14 +54,14 @@ export function expirePendingBookings(now: Date = new Date()): number {
       )
     )
     .run();
-  return result.changes ?? 0;
+  return result.rowsAffected ?? 0;
 }
 
-export function activeBookingForSubmission(
+export async function activeBookingForSubmission(
   submissionId: string
-): SessionBooking | null {
-  expirePendingBookings();
-  const row = db
+): Promise<SessionBooking | null> {
+  await expirePendingBookings();
+  const row = await db
     .select()
     .from(sessionBookings)
     .where(
@@ -96,8 +96,8 @@ function sessionMonthIndex(session: { date: string }): {
   };
 }
 
-export function sessionNumberWithinMonth(sessionId: string): number {
-  const target = db
+export async function sessionNumberWithinMonth(sessionId: string): Promise<number> {
+  const target = await db
     .select()
     .from(webinarSessions)
     .where(eq(webinarSessions.id, sessionId))
@@ -107,7 +107,7 @@ export function sessionNumberWithinMonth(sessionId: string): number {
   const [year, month] = target.date.split("-");
   const monthPrefix = `${year}-${month}-`;
 
-  const rows = db
+  const rows = await db
     .select({ id: webinarSessions.id, date: webinarSessions.date })
     .from(webinarSessions)
     .where(sql`${webinarSessions.date} LIKE ${monthPrefix + "%"}`)
@@ -120,11 +120,11 @@ export function sessionNumberWithinMonth(sessionId: string): number {
   return idx >= 0 ? idx + 1 : 1;
 }
 
-export function generateBookingReference(
+export async function generateBookingReference(
   fullName: string,
   sessionId: string
-): string {
-  const target = db
+): Promise<string> {
+  const target = await db
     .select()
     .from(webinarSessions)
     .where(eq(webinarSessions.id, sessionId))
@@ -134,13 +134,13 @@ export function generateBookingReference(
   }
 
   const { month3 } = sessionMonthIndex(target);
-  const num = sessionNumberWithinMonth(sessionId);
+  const num = await sessionNumberWithinMonth(sessionId);
   const last = sanitizeLastName(fullName);
   const base = `YPV-${month3}${num}-${last}`;
 
   let candidate = base;
   let suffix = 2;
-  while (referenceExists(candidate)) {
+  while (await referenceExists(candidate)) {
     candidate = `${base}-${suffix}`;
     suffix++;
     if (suffix > 999) {
@@ -150,8 +150,8 @@ export function generateBookingReference(
   return candidate;
 }
 
-function referenceExists(reference: string): boolean {
-  const row = db
+async function referenceExists(reference: string): Promise<boolean> {
+  const row = await db
     .select({ id: sessionBookings.id })
     .from(sessionBookings)
     .where(eq(sessionBookings.bookingReference, reference))
@@ -159,10 +159,10 @@ function referenceExists(reference: string): boolean {
   return !!row;
 }
 
-export function listAvailableSessions(now: Date = new Date()) {
-  expirePendingBookings(now);
+export async function listAvailableSessions(now: Date = new Date()) {
+  await expirePendingBookings(now);
   const today = now.toISOString().slice(0, 10);
-  const sessions = db
+  const sessions = await db
     .select()
     .from(webinarSessions)
     .where(
@@ -173,25 +173,28 @@ export function listAvailableSessions(now: Date = new Date()) {
     )
     .all();
 
-  return sessions
+  const sorted = sessions
     .slice()
     .sort((a, b) =>
       a.date < b.date ? -1 : a.date > b.date ? 1 : a.time < b.time ? -1 : 1
-    )
-    .map((s) => {
-      const paidCount = paidCountForSession(s.id);
-      return {
-        id: s.id,
-        date: s.date,
-        time: s.time,
-        duration_minutes: s.durationMinutes,
-        price_usd: s.priceUsd,
-        capacity: s.capacity,
-        paid_count: paidCount,
-        is_full: paidCount >= s.capacity,
-        description: s.description,
-      };
+    );
+
+  const result = [];
+  for (const s of sorted) {
+    const paidCount = await paidCountForSession(s.id);
+    result.push({
+      id: s.id,
+      date: s.date,
+      time: s.time,
+      duration_minutes: s.durationMinutes,
+      price_usd: s.priceUsd,
+      capacity: s.capacity,
+      paid_count: paidCount,
+      is_full: paidCount >= s.capacity,
+      description: s.description,
     });
+  }
+  return result;
 }
 
 export function expiryWindowMs(): number {

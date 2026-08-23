@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
   };
 
   const ip = getIp(req);
-  const result = createReview(
+  const result = await createReview(
     {
       name: typeof body.name === "string" ? body.name : "",
       email: typeof body.email === "string" ? body.email : "",

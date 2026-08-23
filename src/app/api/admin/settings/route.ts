@@ -9,10 +9,10 @@ import { requireAdmin } from "@/lib/auth/guards";
 const SECRET_KEYS = new Set(["smtp.pass", "groq.api_key", "sheets.service_account_json"]);
 
 export async function GET(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
-  const all = db.select().from(appSettings).all();
+  const all = await db.select().from(appSettings).all();
   const safe = all.map((s) => ({
     key: s.key,
     value: SECRET_KEYS.has(s.key) ? (s.value ? "••••••••" : "") : s.value,
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const body = (await req.json()) as Array<{ key: string; value: string }>;
@@ -32,11 +32,11 @@ export async function PATCH(req: NextRequest) {
     // Don't update secret with masked placeholder
     if (SECRET_KEYS.has(key) && value === "••••••••") continue;
 
-    const existing = db.select().from(appSettings).where(eq(appSettings.key, key)).get();
+    const existing = await db.select().from(appSettings).where(eq(appSettings.key, key)).get();
     if (existing) {
-      db.update(appSettings).set({ value, updatedAt: now }).where(eq(appSettings.key, key)).run();
+      await db.update(appSettings).set({ value, updatedAt: now }).where(eq(appSettings.key, key)).run();
     } else {
-      db.insert(appSettings).values({ key, value, updatedAt: now }).run();
+      await db.insert(appSettings).values({ key, value, updatedAt: now }).run();
     }
   }
 

@@ -1,15 +1,19 @@
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
+import { createClient } from "@libsql/client";
+import { drizzle } from "drizzle-orm/libsql";
 import * as schema from "./schema";
 
 const DATABASE_URL = process.env.DATABASE_URL ?? "file:./dev.db";
-const filePath = DATABASE_URL.replace("file:", "");
 
-const sqlite = new Database(filePath);
+// libsql accepts a `file:` URL directly. Callers that still pass a bare path
+// (or the older `file:./dev.db` form) both resolve correctly here.
+const url = DATABASE_URL.startsWith("file:") ? DATABASE_URL : `file:${DATABASE_URL}`;
 
-// Enable WAL mode for better concurrency
-sqlite.pragma("journal_mode = WAL");
-sqlite.pragma("foreign_keys = ON");
+export const client = createClient({ url });
 
-export const db = drizzle(sqlite, { schema });
+// Fire-and-forget: libsql queues these ahead of any query issued later, so the
+// pragmas are in effect before the first real statement runs.
+void client.execute("PRAGMA journal_mode = WAL");
+void client.execute("PRAGMA foreign_keys = ON");
+
+export const db = drizzle(client, { schema });
 export type DB = typeof db;

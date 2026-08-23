@@ -21,31 +21,31 @@ import { eq, sql } from "drizzle-orm";
 async function migrateLocale() {
   console.log("Migrating locale zh -> de...");
 
-  const subUpdated = db.run(
+  const subUpdated = await db.run(
     sql`UPDATE submissions SET locale = 'de' WHERE locale = 'zh'`
   );
-  console.log(`submissions: updated ${subUpdated.changes ?? 0} rows zh->de`);
+  console.log(`submissions: updated ${subUpdated.rowsAffected ?? 0} rows zh->de`);
 
-  const qtDeCount = db
+  const qtDeCount = (await db
     .select({ n: sql<number>`count(*)` })
     .from(questionTranslations)
     .where(eq(questionTranslations.locale, "de"))
-    .get()?.n ?? 0;
-  const lpDeCount = db
+    .get())?.n ?? 0;
+  const lpDeCount = (await db
     .select({ n: sql<number>`count(*)` })
     .from(legalPageTranslations)
     .where(eq(legalPageTranslations.locale, "de"))
-    .get()?.n ?? 0;
+    .get())?.n ?? 0;
 
   if (qtDeCount > 0 || lpDeCount > 0) {
     console.log(
       `Skipping content wipe: de rows already present (question_translations=${qtDeCount}, legal_page_translations=${lpDeCount})`
     );
   } else {
-    const qtZh = db.run(sql`DELETE FROM question_translations WHERE locale = 'zh'`);
-    const lpZh = db.run(sql`DELETE FROM legal_page_translations WHERE locale = 'zh'`);
+    const qtZh = await db.run(sql`DELETE FROM question_translations WHERE locale = 'zh'`);
+    const lpZh = await db.run(sql`DELETE FROM legal_page_translations WHERE locale = 'zh'`);
     console.log(
-      `Cleared stale zh content rows: question_translations=${qtZh.changes ?? 0}, legal_page_translations=${lpZh.changes ?? 0}`
+      `Cleared stale zh content rows: question_translations=${qtZh.rowsAffected ?? 0}, legal_page_translations=${lpZh.rowsAffected ?? 0}`
     );
   }
 

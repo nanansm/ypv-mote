@@ -6,7 +6,7 @@ import { desc, gte, eq, sql } from "drizzle-orm";
 import { requireAdmin } from "@/lib/auth/guards";
 
 export async function GET(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const sp = req.nextUrl.searchParams;
@@ -21,8 +21,8 @@ export async function GET(req: NextRequest) {
 
   const where = conditions.length > 0 ? sql`${conditions.reduce((a, b) => sql`${a} AND ${b}`)}` : undefined;
 
-  const rows = db.select().from(emailLogs).where(where).orderBy(desc(emailLogs.id)).limit(limit).offset((page - 1) * limit).all();
-  const total = (db.select({ c: sql<number>`count(*)` }).from(emailLogs).where(where).get())?.c ?? 0;
+  const rows = await db.select().from(emailLogs).where(where).orderBy(desc(emailLogs.id)).limit(limit).offset((page - 1) * limit).all();
+  const total = (await db.select({ c: sql<number>`count(*)` }).from(emailLogs).where(where).get())?.c ?? 0;
 
   return NextResponse.json({ rows, total, page });
 }

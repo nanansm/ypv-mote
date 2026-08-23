@@ -12,20 +12,20 @@ export default async function LegalPage({
   const { slug } = await params;
   const locale = await getLocale();
 
-  const page = db.select().from(legalPages).where(eq(legalPages.slug, slug)).get();
+  const page = await db.select().from(legalPages).where(eq(legalPages.slug, slug)).get();
   if (!page) notFound();
 
-  const translation = db
+  const translation = (await db
     .select()
     .from(legalPageTranslations)
     .where(eq(legalPageTranslations.pageId, page.id))
-    .all()
+    .all())
     .find((t) => t.locale === locale) ??
-    db
+    (await db
       .select()
       .from(legalPageTranslations)
       .where(eq(legalPageTranslations.pageId, page.id))
-      .all()
+      .all())
       .find((t) => t.locale === "en");
 
   if (!translation) notFound();

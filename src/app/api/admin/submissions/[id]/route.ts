@@ -9,11 +9,11 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const { id } = await params;
-  const row = db.select().from(submissions).where(eq(submissions.id, id)).get();
+  const row = await db.select().from(submissions).where(eq(submissions.id, id)).get();
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json(row);
 }
@@ -22,7 +22,7 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const { id } = await params;
@@ -43,6 +43,6 @@ export async function PATCH(
   if (body.paymentVerifiedBy !== undefined) update.paymentVerifiedBy = body.paymentVerifiedBy;
   if (body.deletedAt !== undefined) update.deletedAt = body.deletedAt;
 
-  db.update(submissions).set(update).where(eq(submissions.id, id)).run();
+  await db.update(submissions).set(update).where(eq(submissions.id, id)).run();
   return NextResponse.json({ ok: true });
 }

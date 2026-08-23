@@ -15,7 +15,7 @@ function escapeCsv(value: string | number | null | undefined): string {
 }
 
 export async function GET(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const sp = req.nextUrl.searchParams;
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
     conditions.push(sql`(${submissions.fullName} LIKE ${term} OR ${submissions.email} LIKE ${term})`);
   }
 
-  const rows = db
+  const rows = await db
     .select()
     .from(submissions)
     .where(and(...conditions))

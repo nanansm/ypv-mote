@@ -8,10 +8,10 @@ import { expirePendingBookings } from "@/lib/sessions";
 import { quickPaymentMethodLabel } from "@/lib/sessions/payment-method";
 
 export async function GET(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
-  expirePendingBookings();
+  await expirePendingBookings();
 
   const sp = req.nextUrl.searchParams;
   const sessionId = sp.get("session_id");
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
 
   const where = conditions.length > 0 ? and(...conditions) : undefined;
 
-  const rows = db
+  const rows = await db
     .select({
       booking: sessionBookings,
       submission: {
@@ -48,11 +48,13 @@ export async function GET(req: NextRequest) {
     .orderBy(desc(sessionBookings.createdAt))
     .all();
 
-  const bookings = rows.map((r) => ({
-    ...r,
-    payment_method:
-      r.submission && r.session ? quickPaymentMethodLabel(r.submission) : null,
-  }));
+  const bookings = await Promise.all(
+    rows.map(async (r) => ({
+      ...r,
+      payment_method:
+        r.submission && r.session ? await quickPaymentMethodLabel(r.submission) : null,
+    }))
+  );
 
   return NextResponse.json({ bookings });
 }

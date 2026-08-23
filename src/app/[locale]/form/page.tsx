@@ -6,9 +6,9 @@ export default async function FormPage() {
   const locale = await getLocale();
   const t = await getTranslations({ locale, namespace: "form" });
 
-  const section1 = getQuestionsForSection(locale, 1);
-  const section2 = getQuestionsForSection(locale, 2);
-  const section3 = getQuestionsForSection(locale, 3);
+  const section1 = await getQuestionsForSection(locale, 1);
+  const section2 = await getQuestionsForSection(locale, 2);
+  const section3 = await getQuestionsForSection(locale, 3);
 
   const sectionLabels = [t("section1"), t("section2"), t("section3")];
 

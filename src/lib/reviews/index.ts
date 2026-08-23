@@ -51,7 +51,7 @@ export function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-export function createReview(input: ReviewInput, ip: string | null): CreateResult {
+export async function createReview(input: ReviewInput, ip: string | null): Promise<CreateResult> {
   const name = (input.name ?? "").trim();
   const email = (input.email ?? "").trim().toLowerCase();
   const comment = (input.comment ?? "").trim();
@@ -82,7 +82,7 @@ export function createReview(input: ReviewInput, ip: string | null): CreateResul
     };
   }
 
-  const existing = db.select().from(reviews).where(eq(reviews.email, email)).get();
+  const existing = await db.select().from(reviews).where(eq(reviews.email, email)).get();
   if (existing) {
     return {
       ok: false,
@@ -93,7 +93,7 @@ export function createReview(input: ReviewInput, ip: string | null): CreateResul
 
   const bypassRateLimit = process.env.DISABLE_REVIEW_RATE_LIMIT === "1";
   if (ip && !bypassRateLimit) {
-    const limit = db
+    const limit = await db
       .select()
       .from(reviewRateLimits)
       .where(eq(reviewRateLimits.ip, ip))
@@ -112,7 +112,7 @@ export function createReview(input: ReviewInput, ip: string | null): CreateResul
 
   const now = new Date().toISOString();
   const id = randomUUID();
-  db.insert(reviews)
+  await db.insert(reviews)
     .values({
       id,
       name,
@@ -127,30 +127,30 @@ export function createReview(input: ReviewInput, ip: string | null): CreateResul
     .run();
 
   if (ip && !bypassRateLimit) {
-    const limit = db
+    const limit = await db
       .select()
       .from(reviewRateLimits)
       .where(eq(reviewRateLimits.ip, ip))
       .get();
     if (limit) {
-      db.update(reviewRateLimits)
+      await db.update(reviewRateLimits)
         .set({ lastSubmittedAt: now })
         .where(eq(reviewRateLimits.ip, ip))
         .run();
     } else {
-      db.insert(reviewRateLimits).values({ ip, lastSubmittedAt: now }).run();
+      await db.insert(reviewRateLimits).values({ ip, lastSubmittedAt: now }).run();
     }
   }
 
-  const inserted = db.select().from(reviews).where(eq(reviews.id, id)).get();
+  const inserted = await db.select().from(reviews).where(eq(reviews.id, id)).get();
   if (!inserted) {
     return { ok: false, code: "validation", message: "Failed to insert review." };
   }
   return { ok: true, review: toReview(inserted) };
 }
 
-export function listApprovedReviews(limit = 6): Review[] {
-  const rows = db
+export async function listApprovedReviews(limit = 6): Promise<Review[]> {
+  const rows = await db
     .select()
     .from(reviews)
     .where(eq(reviews.status, "approved"))
@@ -160,17 +160,17 @@ export function listApprovedReviews(limit = 6): Review[] {
   return rows.map(toReview);
 }
 
-export function listReviews(filters: {
+export async function listReviews(filters: {
   status?: ReviewStatus | null;
   rating?: number | null;
   locale?: string | null;
-}): Review[] {
+}): Promise<Review[]> {
   const conditions: SQL[] = [];
   if (filters.status) conditions.push(eq(reviews.status, filters.status));
   if (filters.rating) conditions.push(eq(reviews.rating, filters.rating));
   if (filters.locale) conditions.push(eq(reviews.locale, filters.locale));
   const where = conditions.length > 0 ? and(...conditions) : undefined;
-  const rows = db
+  const rows = await db
     .select()
     .from(reviews)
     .where(where)
@@ -179,21 +179,21 @@ export function listReviews(filters: {
   return rows.map(toReview);
 }
 
-export function countPendingReviews(): number {
-  const rows = db.select().from(reviews).where(eq(reviews.status, "pending")).all();
+export async function countPendingReviews(): Promise<number> {
+  const rows = await db.select().from(reviews).where(eq(reviews.status, "pending")).all();
   return rows.length;
 }
 
-export function updateReviewStatus(id: string, status: ReviewStatus): Review | null {
+export async function updateReviewStatus(id: string, status: ReviewStatus): Promise<Review | null> {
   const now = new Date().toISOString();
-  db.update(reviews).set({ status, updatedAt: now }).where(eq(reviews.id, id)).run();
-  const row = db.select().from(reviews).where(eq(reviews.id, id)).get();
+  await db.update(reviews).set({ status, updatedAt: now }).where(eq(reviews.id, id)).run();
+  const row = await db.select().from(reviews).where(eq(reviews.id, id)).get();
   return row ? toReview(row) : null;
 }
 
-export function deleteReview(id: string): boolean {
-  const row = db.select().from(reviews).where(eq(reviews.id, id)).get();
+export async function deleteReview(id: string): Promise<boolean> {
+  const row = await db.select().from(reviews).where(eq(reviews.id, id)).get();
   if (!row) return false;
-  db.delete(reviews).where(eq(reviews.id, id)).run();
+  await db.delete(reviews).where(eq(reviews.id, id)).run();
   return true;
 }

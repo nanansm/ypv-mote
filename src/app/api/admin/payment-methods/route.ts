@@ -8,13 +8,13 @@ import {
 import { isPreset } from "@/lib/payment-methods/presets";
 
 export async function GET(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
-  return NextResponse.json({ methods: listPaymentMethods() });
+  return NextResponse.json({ methods: await listPaymentMethods() });
 }
 
 export async function POST(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const body = (await req.json()) as {
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const created = createPaymentMethod({
+  const created = await createPaymentMethod({
     preset: body.preset,
     displayName: typeof body.displayName === "string" ? body.displayName : undefined,
     currencyLabel: typeof body.currencyLabel === "string" ? body.currencyLabel : undefined,

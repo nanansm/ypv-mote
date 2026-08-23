@@ -38,13 +38,13 @@ export default async function SuccessPage({
   const locale = await getLocale();
   const t = await getTranslations({ locale, namespace: "success" });
 
-  expirePendingBookings();
+  await expirePendingBookings();
 
   if (!booking_id) {
     return <NotFoundView locale={locale} t={t} />;
   }
 
-  const booking = db
+  const booking = await db
     .select()
     .from(sessionBookings)
     .where(eq(sessionBookings.id, booking_id))
@@ -54,13 +54,13 @@ export default async function SuccessPage({
     return <NotFoundView locale={locale} t={t} />;
   }
 
-  const session = db
+  const session = await db
     .select()
     .from(webinarSessions)
     .where(eq(webinarSessions.id, booking.sessionId))
     .get();
 
-  const submission = db
+  const submission = await db
     .select()
     .from(submissions)
     .where(eq(submissions.id, booking.submissionId))

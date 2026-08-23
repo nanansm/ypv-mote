@@ -11,19 +11,19 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
-  expirePendingBookings();
+  await expirePendingBookings();
 
   const { id } = await params;
-  const submission = db
+  const submission = await db
     .select()
     .from(submissions)
     .where(eq(submissions.id, id))
     .get();
 
-  const rows = db
+  const rows = await db
     .select({
       booking: sessionBookings,
       session: {
@@ -46,11 +46,13 @@ export async function GET(
     return NextResponse.json({ booking: null });
   }
 
-  const enriched = rows.map((r) => ({
-    ...r,
-    payment_method:
-      submission && r.session ? quickPaymentMethodLabel(submission) : null,
-  }));
+  const enriched = await Promise.all(
+    rows.map(async (r) => ({
+      ...r,
+      payment_method:
+        submission && r.session ? await quickPaymentMethodLabel(submission) : null,
+    }))
+  );
 
   const active = enriched.find(
     (r) =>

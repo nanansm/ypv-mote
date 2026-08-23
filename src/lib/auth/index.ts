@@ -20,7 +20,7 @@ export async function getSession(): Promise<AdminUser | null> {
   const sessionId = cookieStore.get(SESSION_COOKIE)?.value;
   if (!sessionId) return null;
 
-  const session = db
+  const session = await db
     .select()
     .from(adminSessions)
     .where(eq(adminSessions.id, sessionId))
@@ -28,11 +28,11 @@ export async function getSession(): Promise<AdminUser | null> {
 
   if (!session) return null;
   if (new Date(session.expiresAt) < new Date()) {
-    db.delete(adminSessions).where(eq(adminSessions.id, sessionId)).run();
+    await db.delete(adminSessions).where(eq(adminSessions.id, sessionId)).run();
     return null;
   }
 
-  const user = db
+  const user = await db
     .select()
     .from(adminUsers)
     .where(eq(adminUsers.id, session.userId))
@@ -53,7 +53,7 @@ export async function createSession(userId: string): Promise<string> {
   const sessionId = uuidv4();
   const expiresAt = new Date(Date.now() + SESSION_DURATION_MS).toISOString();
 
-  db.insert(adminSessions)
+  await db.insert(adminSessions)
     .values({ id: sessionId, userId, expiresAt, createdAt: new Date().toISOString() })
     .run();
 
@@ -73,15 +73,15 @@ export async function destroySession(): Promise<void> {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get(SESSION_COOKIE)?.value;
   if (sessionId) {
-    db.delete(adminSessions).where(eq(adminSessions.id, sessionId)).run();
+    await db.delete(adminSessions).where(eq(adminSessions.id, sessionId)).run();
   }
   cookieStore.delete(SESSION_COOKIE);
 }
 
-export function getSessionFromHeader(sessionId: string | undefined): AdminUser | null {
+export async function getSessionFromHeader(sessionId: string | undefined): Promise<AdminUser | null> {
   if (!sessionId) return null;
 
-  const session = db
+  const session = await db
     .select()
     .from(adminSessions)
     .where(eq(adminSessions.id, sessionId))
@@ -89,11 +89,11 @@ export function getSessionFromHeader(sessionId: string | undefined): AdminUser |
 
   if (!session) return null;
   if (new Date(session.expiresAt) < new Date()) {
-    db.delete(adminSessions).where(eq(adminSessions.id, sessionId)).run();
+    await db.delete(adminSessions).where(eq(adminSessions.id, sessionId)).run();
     return null;
   }
 
-  const user = db
+  const user = await db
     .select()
     .from(adminUsers)
     .where(eq(adminUsers.id, session.userId))

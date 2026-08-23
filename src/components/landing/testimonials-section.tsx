@@ -56,7 +56,7 @@ function Stars({ rating }: { rating: number }) {
 }
 
 export async function TestimonialsSection({ locale }: { locale: string }) {
-  const reviews = listApprovedReviews(6);
+  const reviews = await listApprovedReviews(6);
   if (reviews.length === 0) return null;
 
   const t = await getTranslations({ locale, namespace: "testimonials" });

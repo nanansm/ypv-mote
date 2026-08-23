@@ -12,26 +12,28 @@ const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_HHMM = /^\d{2}:\d{2}$/;
 
 export async function GET(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
-  const rows = db.select().from(webinarSessions).all();
+  const rows = await db.select().from(webinarSessions).all();
   const sorted = rows
     .slice()
     .sort((a, b) =>
       a.date < b.date ? -1 : a.date > b.date ? 1 : a.time < b.time ? -1 : 1
     );
 
-  const sessions = sorted.map((s) => ({
-    ...s,
-    paid_count: paidCountForSession(s.id),
-  }));
+  const sessions = await Promise.all(
+    sorted.map(async (s) => ({
+      ...s,
+      paid_count: await paidCountForSession(s.id),
+    }))
+  );
 
   return NextResponse.json({ sessions });
 }
 
 export async function POST(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const body = (await req.json()) as {
@@ -84,7 +86,7 @@ export async function POST(req: NextRequest) {
   const id = uuidv4();
   const now = new Date().toISOString();
 
-  db.insert(webinarSessions)
+  await db.insert(webinarSessions)
     .values({
       id,
       date: body.date,
@@ -101,7 +103,7 @@ export async function POST(req: NextRequest) {
     })
     .run();
 
-  const created = db
+  const created = await db
     .select()
     .from(webinarSessions)
     .where(eq(webinarSessions.id, id))

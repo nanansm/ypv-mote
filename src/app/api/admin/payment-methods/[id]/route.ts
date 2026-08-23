@@ -10,16 +10,16 @@ import {
 type Params = { params: Promise<{ id: string }> };
 
 export async function GET(req: NextRequest, { params }: Params) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
   const { id } = await params;
-  const method = getPaymentMethod(id);
+  const method = await getPaymentMethod(id);
   if (!method) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json({ method });
 }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
   const { id } = await params;
 
@@ -40,7 +40,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     }
   }
 
-  const updated = updatePaymentMethod(id, {
+  const updated = await updatePaymentMethod(id, {
     displayName: typeof body.displayName === "string" ? body.displayName : undefined,
     currencyLabel: typeof body.currencyLabel === "string" ? body.currencyLabel : undefined,
     fields,
@@ -57,10 +57,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 }
 
 export async function DELETE(req: NextRequest, { params }: Params) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
   const { id } = await params;
-  const result = deletePaymentMethod(id);
+  const result = await deletePaymentMethod(id);
   if (!result.ok) {
     return NextResponse.json({ error: result.error ?? "Failed" }, { status: 400 });
   }

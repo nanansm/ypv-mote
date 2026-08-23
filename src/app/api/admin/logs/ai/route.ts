@@ -6,11 +6,11 @@ import { desc, sql } from "drizzle-orm";
 import { requireAdmin } from "@/lib/auth/guards";
 
 export async function GET(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   const page = Math.max(1, parseInt(req.nextUrl.searchParams.get("page") ?? "1"));
-  const rows = db.select().from(aiAnalyses).orderBy(desc(aiAnalyses.id)).limit(50).offset((page - 1) * 50).all();
-  const total = (db.select({ c: sql<number>`count(*)` }).from(aiAnalyses).get())?.c ?? 0;
+  const rows = await db.select().from(aiAnalyses).orderBy(desc(aiAnalyses.id)).limit(50).offset((page - 1) * 50).all();
+  const total = (await db.select({ c: sql<number>`count(*)` }).from(aiAnalyses).get())?.c ?? 0;
   return NextResponse.json({ rows, total, page });
 }

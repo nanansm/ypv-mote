@@ -18,14 +18,14 @@ export async function seedDatabase() {
   console.log("[seed] Seeding database...");
 
   // ─── Eligibility Config ────────────────────────────────────────────────────
-  const existing = db
+  const existing = await db
     .select()
     .from(eligibilityConfig)
     .where(eq(eligibilityConfig.id, 1))
     .get();
 
   if (!existing) {
-    db.insert(eligibilityConfig)
+    await db.insert(eligibilityConfig)
       .values({
         id: 1,
         validCountries: JSON.stringify([
@@ -90,21 +90,21 @@ export async function seedDatabase() {
   ];
 
   for (const s of settingRows) {
-    const exists = db
+    const exists = await db
       .select()
       .from(appSettings)
       .where(eq(appSettings.key, s.key))
       .get();
     if (!exists) {
-      db.insert(appSettings).values({ ...s, updatedAt: now }).run();
+      await db.insert(appSettings).values({ ...s, updatedAt: now }).run();
     }
   }
 
   // ─── Payment Methods ───────────────────────────────────────────────────────
   // Idempotent migration: move BCA/Wise from app_settings + seed inactive presets.
-  const settingsByKey = (() => {
+  const settingsByKey = await (async () => {
     const map = new Map<string, string>();
-    for (const row of db.select().from(appSettings).all()) {
+    for (const row of await db.select().from(appSettings).all()) {
       map.set(row.key, row.value);
     }
     return map;
@@ -114,7 +114,7 @@ export async function seedDatabase() {
     return settingsByKey.get(key) ?? "";
   }
 
-  function upsertPaymentMethod(input: {
+  async function upsertPaymentMethod(input: {
     key: string;
     displayName: string;
     currencyLabel: string;
@@ -124,13 +124,13 @@ export async function seedDatabase() {
     isDefaultForIndonesia: number;
     orderIndex: number;
   }) {
-    const existing = db
+    const existing = await db
       .select()
       .from(paymentMethods)
       .where(eq(paymentMethods.key, input.key))
       .get();
     if (existing) return;
-    db.insert(paymentMethods)
+    await db.insert(paymentMethods)
       .values({
         id: randomUUID(),
         key: input.key,
@@ -151,7 +151,7 @@ export async function seedDatabase() {
   const bcaHolder = readSetting("bca.account_holder");
   const bcaNumber = readSetting("bca.account_number");
   const bcaHasData = Boolean(bcaHolder || bcaNumber);
-  upsertPaymentMethod({
+  await upsertPaymentMethod({
     key: "bca",
     displayName: "BCA",
     currencyLabel: "IDR",
@@ -171,7 +171,7 @@ export async function seedDatabase() {
   // Wise (international)
   const wiseHolder = readSetting("wise.account_holder");
   const wiseNumber = readSetting("wise.account_number");
-  upsertPaymentMethod({
+  await upsertPaymentMethod({
     key: "wise",
     displayName: "Wise",
     currencyLabel: "USD",
@@ -189,7 +189,7 @@ export async function seedDatabase() {
   });
 
   // Revolut (inactive preset)
-  upsertPaymentMethod({
+  await upsertPaymentMethod({
     key: "revolut",
     displayName: "Revolut",
     currencyLabel: "EUR",
@@ -206,7 +206,7 @@ export async function seedDatabase() {
   });
 
   // PayPal (inactive preset)
-  upsertPaymentMethod({
+  await upsertPaymentMethod({
     key: "paypal",
     displayName: "PayPal",
     currencyLabel: "USD",
@@ -443,7 +443,7 @@ export async function seedDatabase() {
   };
 
   for (const q of questions) {
-    const existingQ = db
+    const existingQ = await db
       .select()
       .from(formQuestions)
       .where(eq(formQuestions.key, q.key))
@@ -451,7 +451,7 @@ export async function seedDatabase() {
 
     let qId: number;
     if (!existingQ) {
-      const result = db
+      const result = await db
         .insert(formQuestions)
         .values({
           key: q.key,
@@ -474,14 +474,14 @@ export async function seedDatabase() {
     // Insert question translations
     for (const locale of ["en", "de"] as const) {
       const t = locale === "en" ? q.en : q.de;
-      const existingT = db
+      const existingT = (await db
         .select()
         .from(questionTranslations)
         .where(eq(questionTranslations.questionId, qId))
-        .all()
+        .all())
         .find((r) => r.locale === locale);
       if (!existingT) {
-        db.insert(questionTranslations)
+        await db.insert(questionTranslations)
           .values({
             questionId: qId,
             optionId: null,
@@ -497,16 +497,16 @@ export async function seedDatabase() {
     // Insert options
     const opts = questionOptions_data[q.key] ?? [];
     for (const opt of opts) {
-      const existingOpt = db
+      const existingOpt = (await db
         .select()
         .from(questionOptions)
         .where(eq(questionOptions.questionId, qId))
-        .all()
+        .all())
         .find((r) => r.value === opt.value);
 
       let optId: number;
       if (!existingOpt) {
-        const result = db
+        const result = await db
           .insert(questionOptions)
           .values({ questionId: qId, value: opt.value, order: opt.order })
           .returning({ id: questionOptions.id })
@@ -519,14 +519,14 @@ export async function seedDatabase() {
       // Option translations
       for (const locale of ["en", "de"] as const) {
         const label = locale === "en" ? opt.en : opt.de;
-        const existingOT = db
+        const existingOT = (await db
           .select()
           .from(questionTranslations)
           .where(eq(questionTranslations.optionId, optId))
-          .all()
+          .all())
           .find((r) => r.locale === locale);
         if (!existingOT) {
-          db.insert(questionTranslations)
+          await db.insert(questionTranslations)
             .values({
               questionId: null,
               optionId: optId,
@@ -1006,14 +1006,14 @@ Im gesetzlich höchstzulässigen Umfang lehnen wir jede Haftung ab, die aus dem 
 
   for (const slug of legalSlugs) {
     let pageId: number;
-    const existingPage = db
+    const existingPage = await db
       .select()
       .from(legalPages)
       .where(eq(legalPages.slug, slug))
       .get();
 
     if (!existingPage) {
-      const result = db
+      const result = await db
         .insert(legalPages)
         .values({ slug, updatedAt: now })
         .returning({ id: legalPages.id })
@@ -1028,14 +1028,14 @@ Im gesetzlich höchstzulässigen Umfang lehnen wir jede Haftung ab, die aus dem 
       { locale: "en", title: content.enTitle, body: content.enBody },
       { locale: "de", title: content.deTitle, body: content.deBody },
     ]) {
-      const existingTrans = db
+      const existingTrans = (await db
         .select()
         .from(legalPageTranslations)
         .where(eq(legalPageTranslations.pageId, pageId))
-        .all()
+        .all())
         .find((r) => r.locale === locale);
       if (!existingTrans) {
-        db.insert(legalPageTranslations)
+        await db.insert(legalPageTranslations)
           .values({ pageId, locale, title, bodyMarkdown: body })
           .run();
       }
@@ -1179,13 +1179,13 @@ Please log in to the admin panel to review this submission.`,
   ];
 
   for (const t of templates) {
-    const exists = db
+    const exists = await db
       .select()
       .from(emailTemplates)
       .where(eq(emailTemplates.key, t.key))
       .get();
     if (!exists) {
-      db.insert(emailTemplates)
+      await db.insert(emailTemplates)
         .values({ ...t, updatedAt: now })
         .run();
     }

@@ -3,7 +3,7 @@ import { requireAdmin } from "@/lib/auth/guards";
 import { getSheetsClient } from "@/lib/sheets/client";
 
 export async function POST(req: NextRequest) {
-  const auth = requireAdmin(req);
+  const auth = await requireAdmin(req);
   if (auth instanceof NextResponse) return auth;
 
   try {

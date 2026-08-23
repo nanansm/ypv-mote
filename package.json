@@ -13,11 +13,12 @@
     "db:check": "node -e \"const db=require('better-sqlite3')((process.env.DATABASE_URL||'file:./dev.db').replace('file:',''));console.log({config:db.prepare('SELECT count(*) as c FROM eligibility_config').get(),questions:db.prepare('SELECT count(*) as c FROM form_questions').get(),legal:db.prepare('SELECT count(*) as c FROM legal_pages').get(),settings:db.prepare('SELECT count(*) as c FROM app_settings').get(),emails:db.prepare('SELECT count(*) as c FROM email_templates').get()});\"",
     "db:studio": "drizzle-kit studio",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && node scripts/check-await.mjs",
     "test": "tsx --test src/lib/eligibility/engine.test.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:e2e:report": "playwright show-report"
+    "test:e2e:report": "playwright show-report",
+    "check:await": "node scripts/check-await.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

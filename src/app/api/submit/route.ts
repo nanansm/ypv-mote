@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       extraResponses?: Record<string, string>;
     };
 
-    const submission = db
+    const submission = await db
       .select()
       .from(submissions)
       .where(eq(submissions.id, body.partialSubmissionId))
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     const merged = { ...existingExtra, ...(body.extraResponses ?? {}) };
     const extraJson = Object.keys(merged).length > 0 ? JSON.stringify(merged) : null;
 
-    db.update(submissions)
+    await db.update(submissions)
       .set({
         englishLevel: body.englishLevel,
         workedAbroad: body.workedAbroad,
@@ -64,9 +64,9 @@ export async function POST(req: NextRequest) {
     ); */
 
     // Google Sheets sync (fire and forget)
-    void syncSubmissionToSheet(body.partialSubmissionId).catch((syncErr) => {
+    void syncSubmissionToSheet(body.partialSubmissionId).catch(async (syncErr) => {
       console.error("[api/submit] sheets sync failed:", syncErr);
-      db.insert(syncLogs)
+      await db.insert(syncLogs)
         .values({
           submissionId: body.partialSubmissionId,
           service: "google_sheets",
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
 }
 
 async function sendAdminNotification(submissionId: string) {
-  const submission = db
+  const submission = await db
     .select()
     .from(submissions)
     .where(eq(submissions.id, submissionId))
@@ -96,7 +96,7 @@ async function sendAdminNotification(submissionId: string) {
   const adminEmail = await getAdminNotificationEmail();
   if (!adminEmail) return;
 
-  const template = db
+  const template = await db
     .select()
     .from(emailTemplates)
     .where(eq(emailTemplates.key, "admin_notification"))
